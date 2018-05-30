@@ -1,0 +1,5 @@
+com\actionbazaar\persistence\User.class
+com\antonromanov\logic\UserServiceImpl.class
+com\antonromanov\logic\UserService.class
+com\antonromanov\persistence\UserEnt.class
+com\antonromanov\web\UserManager.class
