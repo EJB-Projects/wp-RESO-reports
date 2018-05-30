@@ -1,3 +1,3 @@
 # wp-RESO-reports
 
-Первые попытки разобраться с EJB
+3d commit: NetBeans version
