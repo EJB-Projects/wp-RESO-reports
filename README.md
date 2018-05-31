@@ -1,3 +1,3 @@
 # wp-RESO-reports
 
-Testee
+Some ICE version without Java code. Only JSF. (version 2)
