@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:ace="http://www.icefaces.org/icefaces/components"
+                xmlns:ice="http://www.icesoft.com/icefaces/component"
+                >
+
+    <ice:form id="listUsersForm">
+        <ice:panelCollapsible expanded="true">
+            <f:facet name="header">
+                <ice:outputText value="#{msgs['user.usersTable']}" />
+            </f:facet>
+
+            <ice:dataTable id="usersTable"
+                           value="#{userBean.users}"
+                           var="user"
+                           columnWidths="40%, 40%, 20%"
+                           styleClass="usersTable"
+                           rows="5"
+                           >
+                <ice:column>
+                    <ice:rowSelector id="userSelector"
+                                     value="#{user.selected}"
+                                     multiple="false"
+                                     selectionListener="#{userBean.selectUser}"
+                                     />
+
+                    <f:facet name="header">
+                        <ice:outputText value="#{msgs['user.firstName']}" />
+                    </f:facet>
+                    <ice:panelGroup>
+                        <ice:outputText value="#{user.firstName}"></ice:outputText>
+                    </ice:panelGroup>
+                </ice:column>
+
+                <ice:column>
+                    <f:facet name="header">
+                        <ice:outputText value="#{msgs['user.secondName']}" />
+                    </f:facet>
+                    <ice:panelGroup>
+                        <ice:outputText value="#{user.secondName}"></ice:outputText>
+                    </ice:panelGroup>
+                </ice:column>
+
+                <ice:column>
+                    <f:facet name="header">
+                        <ice:outputText value="#{msgs['user.age']}" />
+                    </f:facet>
+                    <ice:panelGroup>
+                        <ice:outputText value="#{user.age}"></ice:outputText>
+                    </ice:panelGroup>
+                </ice:column>
+
+            </ice:dataTable>
+
+            <ice:dataPaginator rendered="#{userBean.usersSize > 5}"
+                               for="usersTable"
+                               fastStep="3"
+                               paginator="true"
+                               paginatorMaxPages="4"
+                               style="margin-left: auto; margin-right: auto;"
+                               >
+                <f:facet name="first">
+                    <ice:graphicImage url="#{styleBean.themeImageDirectory}arrow-first.gif"
+                                      style="border:none;"
+                                      title="#{msgs['page.dataScrolling.firstpage']}"
+                                      />
+                </f:facet>
+                <f:facet name="last">
+                    <ice:graphicImage url="#{styleBean.themeImageDirectory}arrow-last.gif"
+                                      style="border:none;"
+                                      title="#{msgs['page.dataScrolling.lastpage']}"
+                                      />
+                </f:facet>
+                <f:facet name="previous">
+                    <ice:graphicImage url="#{styleBean.themeImageDirectory}arrow-previous.gif"
+                                      style="border:none;"
+                                      title="#{msgs['page.dataScrolling.previouspage']}"
+                                      />
+                </f:facet>
+                <f:facet name="next">
+                    <ice:graphicImage url="#{styleBean.themeImageDirectory}arrow-next.gif"
+                                      style="border:none;"
+                                      title="#{msgs['page.dataScrolling.nextpage']}"
+                                      />
+                </f:facet>
+                <f:facet name="fastforward">
+                    <ice:graphicImage url="#{styleBean.themeImageDirectory}arrow-ff.gif"
+                                      style="border:none;"
+                                      title="#{msgs['page.dataScrolling.fastforward']}"
+                                      />
+                </f:facet>
+                <f:facet name="fastrewind">
+                    <ice:graphicImage url="#{styleBean.themeImageDirectory}arrow-fr.gif"
+                                      style="border:none;"
+                                      title="#{msgs['page.dataScrolling.fastbackward']}"
+                                      />
+                </f:facet>
+            </ice:dataPaginator>
+
+            <ice:panelGroup styleClass="map">
+                <ice:outputLabel for="map" value="#{msgs['user.map']}" />
+                <ice:outputText value="#{userBean.address}" style="clear: left; display: block; font-size: 1.2em;"/>
+                <ice:gMap id="map" address="#{userBean.address}" zoomLevel="8">
+                    <ice:gMapControl id="largectrl" name="GLargeMapControl" rendered="true"/>
+                    <ice:gMapControl id="scalectrl" name="GScaleControl" rendered="true"/>
+                    <ice:gMapControl id="typectrl" name="GMapTypeControl" rendered="true"/>
+                    <ice:gMapMarker id="gmarker" latitude="59" longitude="30"  rendered="true">
+                        <ice:gMapLatLng id="glatlng" latitude="59.544467" longitude="30.174242"/>
+                    </ice:gMapMarker>
+                </ice:gMap>
+            </ice:panelGroup>
+
+        </ice:panelCollapsible>                
+    </ice:form>
+
+</ui:composition>

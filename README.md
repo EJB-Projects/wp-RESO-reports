@@ -1,3 +1,3 @@
 # wp-RESO-reports
 
-Some ICE version without Java code. Only JSF. (version 2)
+Some ICE version apparentle made in NetBeans  (version 1)
