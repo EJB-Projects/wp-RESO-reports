@@ -13,14 +13,15 @@
   <f:view>
     <h:form>
       <h:panelGrid columns="2">
-        <h:outputText value='Enter first number'/>
+        <h:outputText value='Enter 1st number'/>
         <h:inputText value='#{calculatorBean.x}'/>
         <h:outputText value='Enter second number'/>
         <h:inputText value='#{calculatorBean.y}'/>
-         <h:outputText value='Enter Name'/>
+        <h:outputText value='Enter Name'/>
         <h:inputText value='#{calculatorBean.name}'/>
+
         <h:commandButton action="#{calculatorBean.add}" value="Add"/>
-         <h:commandButton action="#{calculatorBean.eddU}" value="Add User"/>
+        <h:commandButton action="#{calculatorBean.eddU}" value="Add User"/>
       </h:panelGrid>
     </h:form>
   </f:view>
