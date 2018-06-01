@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
@@ -28,9 +27,6 @@ public class CalculatorBean implements Serializable {
     @Inject
     Calculator calculator;
 
-    @EJB
-    private userDAOservic userDao;
-
     private String name;
     private String username;
     private double x;
@@ -49,16 +45,8 @@ public class CalculatorBean implements Serializable {
     private void loadData() {
         users = new ArrayList<>();
         users2 = new ArrayList<>();
-
-        //List<Test> allUser = userDao.getAll();
-
-        userDao.addBid(new Test());
-
-      /*  for (Test temp : allUser) {
-            System.out.println("---------->  " + temp.getName());
-        }
-*/
-
+        //Calculator calculator = users.get(0);
+        //setTodo(t.getName());
     }
 
     public void valueChanged(ValueChangeEvent e) {

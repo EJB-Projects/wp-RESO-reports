@@ -1,3 +1,3 @@
 # wp-RESO-reports
 
-jsf + cdi + ejb + IDEA + Maven + jpa. Version 7
+jsf + cdi + ejb + IDEA + Maven + ICEFaces. Version 8

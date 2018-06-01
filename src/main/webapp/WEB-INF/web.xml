@@ -1,23 +1,6 @@
 <?xml version="1.0"?>
 
-<!--
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
--->
+
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
@@ -37,9 +20,42 @@
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.jsf</url-pattern>
+    <url-pattern>/icefaces/*</url-pattern>
   </servlet-mapping>
 
-  <!-- Welcome files -->
+  <!-- More efficient, in an AJAX environment, to have server side state saving -->
+  <context-param>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>server</param-value>
+  </context-param>
+
+  <!-- HTML comments become components unless they're stripped -->
+  <context-param>
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+
+  <!-- If you're using ice:gmap component, you'll need your own key here -->
+  <context-param>
+    <param-name>com.icesoft.faces.gmapKey</param-name>
+    <param-value>ABQIAAAADlu0ZiSTam64EKaCQr9eTRTOTuQNzJNXRlYRLknj4cQ89tFfpxTEqxQnVWL4k55OPICgF5_SOZE06A
+    </param-value>
+  </context-param>
+
+  <!-- Many of the ICEfaces Components make use of the Resource Servlet -->
+  <servlet>
+    <servlet-name>Resource Servlet</servlet-name>
+    <servlet-class>com.icesoft.faces.webapp.CompatResourceServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- These specific mappings are necessary for the Resource Servlet to function properly -->
+  <servlet-mapping>
+    <servlet-name>Resource Servlet</servlet-name>
+    <url-pattern>/xmlhttp/*</url-pattern>
+  </servlet-mapping>
+
+   <!-- Welcome files -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.html</welcome-file>
