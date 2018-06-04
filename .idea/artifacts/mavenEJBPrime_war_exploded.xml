@@ -13,7 +13,6 @@
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.icefaces:icefaces-ace:4.2.0" />
           <element id="library" level="project" name="Maven: org.icefaces:icefaces:4.2.0" />
-          <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.1" />
         </element>
       </element>
     </root>

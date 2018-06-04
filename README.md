@@ -1,3 +1,3 @@
 # wp-RESO-reports
 
-Version 14 (EJBTest14 (ice + ace + IDEA)(Hard tree from iceFaces.org))
+EJBTest14 (ice + IDEA)(real working stable Ice Maven version)

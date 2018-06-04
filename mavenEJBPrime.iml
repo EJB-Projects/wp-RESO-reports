@@ -31,7 +31,5 @@
     <orderEntry type="library" name="Maven: org.icefaces:icefaces-ace:4.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.icefaces:icefaces:4.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.icepush:icepush:4.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.icefaces:icefaces-comps:1.8.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
   </component>
 </module>
