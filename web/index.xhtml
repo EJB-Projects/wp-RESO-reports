@@ -5,7 +5,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:icecore="http://www.icefaces.org/icefaces/core"
-      xmlns:ace="http://www.icefaces.org/icefaces/components">
+      xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ice="http://www.icesoft.com/icefaces/component">
 <h:head>
    <title>ICEfaces Welcome Page</title>
 </h:head>
@@ -14,13 +14,36 @@
 
       <ace:panel header="Welcome to ICEfaces">
          <h:panelGrid columns="1">
-
             <ace:linkButton id="linkButton1" value="ICEfaces Overview" href="http://wiki.icesoft.org/display/ICE/ICEfaces+Overview"></ace:linkButton>
-
          </h:panelGrid>
       </ace:panel>
 
+      <ace:panel header="Welcome to ICEfaces">
+         <ace:tree id="tree"
+                   expansion="true"
+                   selection="true"
+                   reordering="true"
+                   value="#{mainBean.treeRoots}"
+                   var="node"
+                   stateVar="nState"
+                   type="#{node.type}">
+            <ace:ajax event="select" render="@all" execute="@all" />
+            <ace:ajax event="deselect" render="@all" execute="@all" />
+            <ace:node type="country">
+               Country: <h:outputText value="#{node.name}" />
+            </ace:node>
+            <ace:node type="province">
+               Province: <h:outputText value="#{node.name}" />
+            </ace:node>
 
-   </h:form>
+            <ace:node>
+               City: <h:outputText value="#{node.name}" />
+            </ace:node>
+         </ace:tree>
+      </ace:panel>
+
+
+
+</h:form>
 </h:body>
 </html>

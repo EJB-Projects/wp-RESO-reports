@@ -1,30 +1,46 @@
 
-import javax.faces.application.FacesMessage;
+
+import java.io.Serializable;
+import java.util.List;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.icefaces.util.JavaScriptRunner;
 
-@ManagedBean(name = "mainBean")
+@ManagedBean(name= MainBean.BEAN_NAME)
 @SessionScoped
-public class MainBean {
+public class MainBean implements Serializable {
+    public static final String BEAN_NAME = "mainBean";
+    public String getBeanName() { return BEAN_NAME; }
+    private List<LocationNodeImpl> treeRoots = TreeDataFactory.getTreeRoots();
 
-    private String inputText;
+  //  private transient NodeStateCreationCallback contractProvinceInit = new TreeNodeStateCreationCallback();
 
-    public String getInputText() {
-        return inputText;
+    public List<LocationNodeImpl> getTreeRoots() {
+        return treeRoots;
     }
 
-    public void setInputText(String inputText) {
-        this.inputText = inputText;
+    public void print(String text) {
+        JavaScriptRunner.runScript(FacesContext.getCurrentInstance(),
+                "alert('"+text+"');");
     }
 
-    public void showMessage() {
-        FacesMessage message = new FacesMessage("Заголовок", "Частичное обновление страницы");
-        message.setSeverity(FacesMessage.SEVERITY_INFO); //как выглядит окошко с сообщением
-        FacesContext.getCurrentInstance().addMessage(null, message);
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Всплывашка", "GrowlMessage"));
-
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Значение", inputText));
+  /*  public NodeStateCreationCallback getContractProvinceInit() {
+        return contractProvinceInit;
+    }*/
+/*
+    public void setContractProvinceInit(NodeStateCreationCallback contractProvinceInit) {
+        this.contractProvinceInit = contractProvinceInit;
     }
+*/
+    /*
+    private static class TreeNodeStateCreationCallback implements NodeStateCreationCallback, Serializable {
+        public NodeState initializeState(NodeState newState, Object node) {
+            LocationNodeImpl loc = (LocationNodeImpl) node;
+            if (loc.getType().equals("country"))
+                newState.setExpanded(true);
+            return newState;
+        }
+    }*/
 }

@@ -28,7 +28,16 @@
             <artifactId>icepush</artifactId>
             <version>4.2.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.icefaces</groupId>
+            <artifactId>icefaces-comps</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
 
 
     </dependencies>
