@@ -1,66 +1,41 @@
-
-
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
-import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.CustomScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ViewScoped;
 
-import org.icefaces.ace.model.tree.NodeState;
-import org.icefaces.ace.model.tree.NodeStateCreationCallback;
-import org.icefaces.ace.model.tree.NodeStateMap;
-import org.icefaces.util.JavaScriptRunner;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
-@ManagedBean(name= MainBean.BEAN_NAME)
-@SessionScoped
+
+@ManagedBean(name = MainBean.BEAN_NAME)
+@ViewScoped
 public class MainBean implements Serializable {
     public static final String BEAN_NAME = "mainBean";
-    public String getBeanName() { return BEAN_NAME; }
-    private List<LocationNodeImpl> treeRoots = TreeDataFactory.getTreeRoots();
-    private NodeStateMap stateMap;
 
-    private transient NodeStateCreationCallback contractProvinceInit = new TreeNodeStateCreationCallback();
-
-    public List<LocationNodeImpl> getTreeRoots() {
-        return treeRoots;
+    public String getBeanName() {
+        return BEAN_NAME;
     }
 
-    public void print(String text) {
-        JavaScriptRunner.runScript(FacesContext.getCurrentInstance(),
-                "alert('"+text+"');");
+    private TreeNode root;
+    private TreeNode root2;
+    private TreeNode root3;
+    private String rootName;
+
+    TreeConverter treeConverter = new TreeConverter();
+    TestRecursive testRecursive = new TestRecursive();
+
+    @PostConstruct
+    public void init() {
+
+
+        root3 = testRecursive.Do();
+
+        root2 = treeConverter.doConvert();
+        root = root3;
+
     }
 
-    public NodeStateMap getStateMap() {
-        return stateMap;
-    }
-
-    public void setStateMap(NodeStateMap stateMap) {
-        this.stateMap = stateMap;
-    }
-
-    public NodeStateCreationCallback getContractProvinceInit() {
-        return contractProvinceInit;
-    }
-
-    public void setContractProvinceInit(NodeStateCreationCallback contractProvinceInit) {
-        this.contractProvinceInit = contractProvinceInit;
-    }
-
-    /* Proxy method to avoid JBossEL accessing stateMap like map for method invocations */
-    public List getSelected() {
-        if (stateMap == null) return Collections.emptyList();
-        return stateMap.getSelected();
-    }
-
-    private static class TreeNodeStateCreationCallback implements NodeStateCreationCallback, Serializable {
-        public NodeState initializeState(NodeState newState, Object node) {
-            LocationNodeImpl loc = (LocationNodeImpl) node;
-            if (loc.getType().equals("country"))
-                newState.setExpanded(true);
-            return newState;
-        }
+    public TreeNode getRoot() {
+        return root;
     }
 }

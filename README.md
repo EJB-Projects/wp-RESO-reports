@@ -1,3 +1,3 @@
 # wp-RESO-reports
 
-EJBTest16 (ice + ace + IDEA)(tree Simple Version)
+EJBTest17 (prime + IDEA)(tree)
