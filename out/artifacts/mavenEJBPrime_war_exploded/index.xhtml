@@ -24,7 +24,9 @@
                    selection="true"
                    reordering="true"
                    value="#{mainBean.treeRoots}"
+                   stateCreationCallback="#{mainBean.contractProvinceInit}"
                    var="node"
+                   stateMap="#{mainBean.stateMap}"
                    stateVar="nState"
                    type="#{node.type}">
             <ace:ajax event="select" render="@all" execute="@all" />
@@ -35,7 +37,7 @@
             <ace:node type="province">
                Province: <h:outputText value="#{node.name}" />
             </ace:node>
-
+            // Default node type
             <ace:node>
                City: <h:outputText value="#{node.name}" />
             </ace:node>

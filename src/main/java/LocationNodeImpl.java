@@ -125,6 +125,7 @@ public class LocationNodeImpl implements MutableTreeNode, Serializable {
         }
 
         public void setUserObject(Object o) {
+            // Not required for any ace:tree functionality
             throw new UnsupportedOperationException();
         }
 
