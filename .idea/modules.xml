@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jsf-cdi-and-ejb.iml" filepath="$PROJECT_DIR$/jsf-cdi-and-ejb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ejbIce.iml" filepath="$PROJECT_DIR$/ejbIce.iml" />
     </modules>
   </component>
 </project>
