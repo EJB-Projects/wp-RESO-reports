@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WebApplication2(II).iml" filepath="$PROJECT_DIR$/WebApplication2(II).iml" />
+      <module fileurl="file://$PROJECT_DIR$/mavenEJBPrime.iml" filepath="$PROJECT_DIR$/mavenEJBPrime.iml" />
     </modules>
   </component>
 </project>
