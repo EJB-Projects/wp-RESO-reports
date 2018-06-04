@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ejbIce.iml" filepath="$PROJECT_DIR$/ejbIce.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EJBIceII10.iml" filepath="$PROJECT_DIR$/EJBIceII10.iml" />
     </modules>
   </component>
 </project>

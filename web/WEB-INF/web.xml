@@ -30,8 +30,8 @@
         <param-value>ABQIAAAADlu0ZiSTam64EKaCQr9eTRTOTuQNzJNXRlYRLknj4cQ89tFfpxTEqxQnVWL4k55OPICgF5_SOZE06A
         </param-value>
     </context-param>
-
-
-
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>
