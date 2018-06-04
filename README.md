@@ -1,3 +1,3 @@
 # wp-RESO-reports
 
-Version 10
+Version 12.1
