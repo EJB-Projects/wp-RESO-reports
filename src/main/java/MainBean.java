@@ -1,30 +1,61 @@
-
-import javax.faces.application.FacesMessage;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.icefaces.ace.model.tree.NodeState;
+import org.icefaces.ace.model.tree.NodeStateCreationCallback;
+import org.icefaces.ace.model.tree.NodeStateMap;
+import org.icefaces.util.JavaScriptRunner;
 
-@ManagedBean(name = "mainBean")
+@ManagedBean(name= MainBean.BEAN_NAME)
 @SessionScoped
-public class MainBean {
+public class MainBean implements Serializable {
+    public static final String BEAN_NAME = "mainBean";
+    public String getBeanName() { return BEAN_NAME; }
+    private List<LocationNodeImpl> treeRoots = TreeDataFactory.getTreeRoots();
+    private NodeStateMap stateMap;
 
-    private String inputText;
+    private transient NodeStateCreationCallback contractProvinceInit = new TreeNodeStateCreationCallback();
 
-    public String getInputText() {
-        return inputText;
+    public List<LocationNodeImpl> getTreeRoots() {
+        return treeRoots;
     }
 
-    public void setInputText(String inputText) {
-        this.inputText = inputText;
+    public void print(String text) {
+        JavaScriptRunner.runScript(FacesContext.getCurrentInstance(),
+                "alert('"+text+"');");
     }
 
-    public void showMessage() {
-        FacesMessage message = new FacesMessage("Заголовок", "Частичное обновление страницы");
-        message.setSeverity(FacesMessage.SEVERITY_INFO); //как выглядит окошко с сообщением
-        FacesContext.getCurrentInstance().addMessage(null, message);
+    public NodeStateMap getStateMap() {
+        return stateMap;
+    }
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Всплывашка", "GrowlMessage"));
+    public void setStateMap(NodeStateMap stateMap) {
+        this.stateMap = stateMap;
+    }
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Значение", inputText));
+    public NodeStateCreationCallback getContractProvinceInit() {
+        return contractProvinceInit;
+    }
+
+    public void setContractProvinceInit(NodeStateCreationCallback contractProvinceInit) {
+        this.contractProvinceInit = contractProvinceInit;
+    }
+
+    /* Proxy method to avoid JBossEL accessing stateMap like map for method invocations */
+    public List getSelected() {
+        if (stateMap == null) return Collections.emptyList();
+        return stateMap.getSelected();
+    }
+
+    private static class TreeNodeStateCreationCallback implements NodeStateCreationCallback, Serializable {
+        public NodeState initializeState(NodeState newState, Object node) {
+            LocationNodeImpl loc = (LocationNodeImpl) node;
+            if (loc.getType().equals("country"))
+                newState.setExpanded(true);
+            return newState;
+        }
     }
 }
