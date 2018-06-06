@@ -7,6 +7,18 @@
     <groupId>mavenEJBPrime</groupId>
     <artifactId>mavenEJBPrime</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <properties>
         <primefaces-version>5.2.RC1</primefaces-version>
@@ -15,14 +27,14 @@
 
     <dependencies>
 
-        <!--JSF (include "jsf-api" and "jsf-impl")-->
+        <!--JSF (include "jsf-api" and "jsf-impl") (2.2.10) (1.8.1)-->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.faces</artifactId>
             <version>2.2.10</version>
         </dependency>
 
-        <!--Primefaces library-->
+              <!--Primefaces library-->
         <!--Primefaces библиотеки-->
         <dependency>
             <groupId>org.primefaces</groupId>
@@ -41,7 +53,28 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.icefaces</groupId>
+            <artifactId>icefaces-comps</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <!--Primefaces библиотеки
+        <dependency>
+            <groupId>org.icefaces</groupId>
+            <artifactId>icefaces-comps</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+-->
 
     </dependencies>
     <!--Primefaces repository. Need to download themes-->
