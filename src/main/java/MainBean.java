@@ -9,24 +9,23 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 public class MainBean implements Serializable {
     public static final String BEAN_NAME = "mainBean";
-
     public String getBeanName() {
         return BEAN_NAME;
     }
-
     private TreeNode root;
-
 
     TreeParse treeParse = new TreeParse();
 
     @PostConstruct
     public void init() {
-
         root = treeParse.Do();
-
     }
 
     public TreeNode getRoot() {
         return root;
     }
+
+
+
+
 }

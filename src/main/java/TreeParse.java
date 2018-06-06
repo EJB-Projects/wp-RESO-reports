@@ -42,8 +42,8 @@ public class TreeParse {
     // Этот метод добавляет новую PrimeFace ноду
     // @newNodeName - имя ноды. String
     // @selectedNode - в какую ветку собственно добавлять. То есть кто папа. Тип - TreeNode
-    public TreeNode addChildNodeRet(String newNodeName, TreeNode selectedNode) {
-        TreeNode newNode = new DefaultTreeNode(newNodeName, selectedNode);
+    public TreeNode addChildNodeRet(String nodeType, String newNodeName, TreeNode selectedNode) {
+        TreeNode newNode = new DefaultTreeNode(nodeType, newNodeName, selectedNode);
         return newNode;
     }
 
@@ -66,7 +66,7 @@ public class TreeParse {
              *      пихнем в NodeCycle позже, чтобы он знал куда пихать то, что он спарсит.
              * - взяли у текущей свинговой ноды объект в формате свингового TreeNode.  По нему будет бегать наш рекурсивный NodeCycle.
              */
-            TreeNode newNode = this.addChildNodeRet((defaultTreeSwingModel.getChild((defaultTreeSwingModel.getRoot()), i).toString()), root);
+            TreeNode newNode = this.addChildNodeRet("parent",(defaultTreeSwingModel.getChild((defaultTreeSwingModel.getRoot()), i).toString()), root);
 
             // выбираем текущую ноду по итератору цикла чтобы к ней обращаться
             javax.swing.tree.TreeNode o = (javax.swing.tree.TreeNode) defaultTreeSwingModel.getChild(swingTree.getRoot(), i);
@@ -100,7 +100,7 @@ public class TreeParse {
               // Снова хватаем свинговую NodeTree (через каст).
                 javax.swing.tree.TreeNode leaf = (javax.swing.tree.TreeNode) defaultTreeSwingModel.getChild(node, i);
               // добавляем найденное -> в PrimeFaces ноду
-                TreeNode newInternalNode = this.addChildNodeRet((leaf.toString()), currentNode);
+                TreeNode newInternalNode = this.addChildNodeRet("child", (leaf.toString()), currentNode);
                 /** Еще одна проверка для вызова рекурсии. То есть, если дети есть, вызываем этот же метод
                  *      рекурсивно и все по новой.
                  *
