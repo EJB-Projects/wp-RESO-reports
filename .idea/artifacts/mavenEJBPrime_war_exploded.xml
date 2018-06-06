@@ -2,10 +2,10 @@
   <artifact type="exploded-war" name="mavenEJBPrime:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/mavenEJBPrime_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="mavenEJBPrime/web/Web" />
+      <element id="javaee-facet-resources" facet="PrimeTreeActionListener/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="mavenEJBPrime" />
+          <element id="module-output" name="PrimeTreeActionListener" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.1" />

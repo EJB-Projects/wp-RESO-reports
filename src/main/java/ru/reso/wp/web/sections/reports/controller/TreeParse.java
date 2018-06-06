@@ -3,7 +3,11 @@ package ru.reso.wp.web.sections.reports.controller;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+
 import javax.swing.tree.DefaultTreeModel;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 //Конвертер Swing Default Tree (который работает с IceFaces) в PrimeFaces TreeNode
 //
@@ -16,6 +20,8 @@ public class TreeParse {
 
     private TreeNode root;
     public Integer level = 0;
+    //private TreeNodeController treeNodeController = new TreeNodeController();
+    private Map<String, Integer> keyMap = new HashMap<String, Integer>();
     // Тестовая болванка со Свинговым деревом. На боевом объекте (видимо в следующей версии) будем пихать это хозяйство уже как параметр
     DefaultTreeTest defaultTreeTest = new DefaultTreeTest();
     // Свинговое дерево-объект, в который зальем выдачу "болванки" ru.reso.wp.web.sections.reports.controller.DefaultTreeTest
@@ -28,11 +34,18 @@ public class TreeParse {
         // Берем рут (корень) от этого свингового дерева, чтобы от него "плясать" (парсить). Причем берем/задаем именно уже Праймфейсовский корень. root - это праймфесофская верхушка
         root = new DefaultTreeNode(defaultTreeSwingModel.getRoot().toString(), null);
     }
-// Второй конструктор, который подпихивает дерево Swing уже как параметр. Его дальше и будем парсить...
+
+    // Второй конструктор, который подпихивает дерево Swing уже как параметр. Его дальше и будем парсить...
     TreeParse(DefaultTreeModel treeModel) {
 
         this.defaultTreeSwingModel = treeModel;
         root = new DefaultTreeNode(defaultTreeSwingModel.getRoot().toString(), null);
+    }
+
+
+    public Map getMap() {
+
+        return keyMap;
     }
 
 
@@ -52,7 +65,13 @@ public class TreeParse {
     // @newNodeName - имя ноды. String
     // @selectedNode - в какую ветку собственно добавлять. То есть кто папа. Тип - TreeNode
     public TreeNode addChildNodeRet(String nodeType, String newNodeName, TreeNode selectedNode) {
+
         TreeNode newNode = new DefaultTreeNode(nodeType, newNodeName, selectedNode);
+
+        Random r = new Random();
+        int itid = 10 + r.nextInt((100 - 1) + 1) + 1;
+        String rowK = newNode.getRowKey();
+        keyMap.put(rowK, itid);
         return newNode;
     }
 
@@ -117,12 +136,12 @@ public class TreeParse {
                 TreeNode newInternalNode;
 
                 //Проверяем уровень вложенности
-           //     if (level == 1) {
+                //     if (level == 1) {
 
-             //   } else {
+                //   } else {
 
-             //       newInternalNode = this.addChildNodeRet("child", (leaf.toString() + " - " + level.toString()), currentNode);
-              //  }
+                //       newInternalNode = this.addChildNodeRet("child", (leaf.toString() + " - " + level.toString()), currentNode);
+                //  }
                 /** Еще одна проверка для вызова рекурсии. То есть, если дети есть, вызываем этот же метод
                  *      рекурсивно и все по новой.
                  *

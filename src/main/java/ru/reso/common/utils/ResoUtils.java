@@ -1,6 +1,7 @@
 package ru.reso.common.utils;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class ResoUtils {
     public static boolean isEmpty(byte[] outputFile) {
@@ -9,14 +10,25 @@ public class ResoUtils {
         return false;
     }
 
-    public static ArrayList<String> getArrayListFromString(String panelString, String s) {
-        ArrayList<String> people = new ArrayList<String>();
+    public static ArrayList<String> getArrayListFromString(String aSource, String aDelim) {
+        ArrayList<String> result = new ArrayList<String>();
 
-        people.add("DynamicPanel");
-        people.add("Alice");
-        people.add("Kate");
-        people.add("Sam");
+        if ((aSource != null) && (aSource.length() > 0)) {
 
-        return people;
+            StringTokenizer st = new StringTokenizer(aSource, aDelim);
+
+            while (st.hasMoreTokens()) {
+                String temp = st.nextToken();
+                result.add(temp.trim());
+            }
+
+            result.add("DynamicPanel");
+            result.add("Alice");
+            result.add("Kate");
+            result.add("Sam");
+
+        }
+
+        return result;
     }
 }

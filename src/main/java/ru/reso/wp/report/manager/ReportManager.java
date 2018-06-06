@@ -264,11 +264,7 @@ public class ReportManager extends ResoRemoteObject implements Serializable {
         parentt = ReportFolder.getReportFolderByID(reportFolders, ff.getParentID());
         System.out.println("ДОБАВЛЯЕМ ОТЧЕТ   =   " + r.getName());
         parentt.getReports().add(r);
-
-
-
         //   }
-
         //     rs.close();
 
     }

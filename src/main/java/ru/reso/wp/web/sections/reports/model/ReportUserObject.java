@@ -12,7 +12,6 @@ import ru.reso.wp.report.models.base.Report;
 import javax.faces.event.ActionEvent;
 import ru.reso.wp.web.models.NodeUserObject;
 import ru.reso.wp.web.sections.reports.controller.MainBean;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ReportUserObject  extends NodeUserObject {

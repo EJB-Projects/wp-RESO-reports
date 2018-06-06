@@ -3,7 +3,11 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/icefaces/icefaces-comps/1.8.1/icefaces-comps-1.8.1.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/icefaces/icefaces-comps/1.8.1/icefaces-comps-1.8.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/icefaces/icefaces-comps/1.8.1/icefaces-comps-1.8.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

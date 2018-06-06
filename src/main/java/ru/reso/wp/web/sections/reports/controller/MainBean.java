@@ -3,15 +3,15 @@ package ru.reso.wp.web.sections.reports.controller;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.faces.event.ActionEvent;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ViewScoped;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
-import ru.reso.wp.admin.consts.UserConsts;
-import ru.reso.wp.admin.users.employee.UserEmployeeProfile;
 
 import javax.servlet.ServletContext;
 
@@ -23,25 +23,13 @@ import ru.reso.wp.web.sections.reports.ResoManagedBean;
 import ru.reso.wp.web.sections.reports.model.ReportFolderUserObject;
 
 import java.io.File;
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.util.*;
-import java.util.ArrayList;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
-import ru.reso.wp.web.sections.reports.model.ReportFolderUserObject;
 import ru.reso.wp.web.sections.reports.model.ReportUserObject;
 
-import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
-import javax.sql.rowset.WebRowSet;
 
 
 @ManagedBean(name = MainBean.BEAN_NAME)
@@ -53,6 +41,12 @@ public class MainBean extends ResoManagedBean implements Serializable {
     public String getBeanName() {
         return BEAN_NAME;
     }
+
+
+    /**
+     * Отдельный класс с мапой, связывающий id праймфейсовского дерева и id из БД (у отчета или папки)
+     */
+    public TreeNodeController treeNodeController;
 
     /**
      * Дерево папок отчетов
@@ -71,6 +65,16 @@ public class MainBean extends ResoManagedBean implements Serializable {
     //TreeParse treeParse = new TreeParse(folderTreeModel);
     TreeParse treeParse = new TreeParse();
 
+
+    private TreeNode selectedNode;
+
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
 
     /**
      * Пусть к папке проекта, в которой хранятся палели для шаблонов отчетов
@@ -95,32 +99,151 @@ public class MainBean extends ResoManagedBean implements Serializable {
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
 
 
         try {
-            folderTreeModel =  initSwingTree();
+            folderTreeModel = initSwingTree();
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("Прошли инициализацию");
 
-           if (folderTreeModel == null) {
-               System.out.println("Пиписька is empty");
-        //}
-            root = treeParse.Do();
+        if (folderTreeModel == null) {
 
+            System.out.println("ЩА БУДЕМ ТЕСТИТЬ КОНТРОЛЛЕР НАШ");
+            treeNodeController = new TreeNodeController();
 
+            root = treeNodeController.getTreeNode();
+            //root = treeParse.Do();
         } else {
 
-            treeParse.setDefaultTreeSwingModel(folderTreeModel);
-            root = treeParse.Do();
+          //  treeParse.setDefaultTreeSwingModel(folderTreeModel);
+         //   root = treeParse.Do();
+
+            System.out.println("ЩА БУДЕМ ТЕСТИТЬ КОНТРОЛЛЕР НАШ 2");
+            treeNodeController = new TreeNodeController(folderTreeModel);
+            root = treeNodeController.getTreeNode();
 
 
         }
 
 
     }
+
+    public void paramTest(ActionEvent actionEvent) {
+
+        System.out.print("selectedNode ----------------->" + this.selectedNode);
+
+        if (selectedNode != null) {
+
+            FacesContext context = FacesContext.getCurrentInstance();
+            Map<String, String> map = context.getExternalContext().getRequestParameterMap();
+
+
+            /**
+             * nodeID представляет собой связку из folderID, reportID Если это
+             * так то выбрали "Отчет", если нет то папку...  - это как бы текст (и соответственно логика) из предыдущей версии (которая на ICEFaces).
+             * Но вот ВОПРОС - надо ли это это в версии для PrimFaces я прям х..й знает. Дело в том, что TreeParse уже работает так, что добавляет к каждой ноде
+             * соответствующее свойство. То есть вот там строчка есть:
+             *
+             * this.addChildNodeRet("childwchild"
+             *
+             * ... вот это вот "childwchild" - это свойство (видимо только у Праймфейсовского дерева) nodeType. Которое потом мы с легкостью используем в Праймфесовском JSF
+             * (то есть на клиенте) например, так:
+             *
+             * <p:treeNode type="childwchild">
+             <p:commandLink id="childNode" upda..... и так далее.....
+             *
+             * .... что позволяет нам уже в самом jsf, то есть, опять же, на клиенте, определять тип ноды и ее соответственно раскрашивать или там как-то обрабатывать. На сколько это удобно в
+             * сравнении с IceFaces - я хз. По мне так было бы как раз удобнее все это пихнуть в UserObject, то есть прописать на сервере (как бы), то есть в Java. Потому, что если появилось такое
+             * желание херачить все это на фронтенде, с понтом дела разделить два кода, аля "у нас появится новый фронтенд-кодер", то имхо лучше было бы сразу переносить это на Спринговый РЕСТ
+             * и нормальный JS фреймворк типа Ангуляра, потому что все эти танцы с бубнами с переносом Ice в Прайм все равно займут до хера времени.
+             *
+             * Но вернемся к нашим баранам - теперь возникает вопрос: а нужна ли нам на хер эта заморочка с таким nodeID, чтобы определить - папка это или лист, если, как я написал выше,
+             * мы уже в TreeParse задаем все это. То есть прям в дереве. ХЗ, короче.... Потаскаю этот nodeId дальше, но по возможности логику обработки постараюсь сводить к nodeType (и если прокатит
+             * то в следущих итерациях/ревизиях/псевдо-коммитах закаменчу и удалю пляски с nodeID.
+             *
+             */
+
+            /** [ROMAB] 16.05.2018 14:55
+             *
+             * ЧТО В ИТОГЕ ВЫЯСНИЛОСЬ: в итоге выяснилось, что все эти танцы с бубнами с записыванием каким-то бля id с помощью Usetobject'в через <f:param... в ноду и геморой сс ее последующим
+             * парсингом через всякие там arraytostring в хер не нужно. Потому, что мой TreeParse уже пихает на этапе парсинга nodeType в дерево и этот тип снимается потом простым
+             * event.getTreeNode().getType().toString(). А там же (в IceFaces) ведь еще id пихался через вот такой простите пиздец -
+             *
+             * result = "N" + String.valueOf(report.getFolderID()) + "N" + getCountID();
+             *
+             * ... То есть сначала, бля, сочинили какую-то говно-строчку с делиметрами ввиде N, потом блин ее парсим. Короче, я все это убираю на хер и определяю тип ноды тупо через Праймфейсовский
+             * nodeType.
+             *
+             *
+             *
+             * И вот еще какая тема. Это событие ActionEvent у CommandLink срабатывает всегда раньше, чем NodeSelectEvent event. Типа только на второе нажатие по одной и той же ноде
+             * selectedNode возвращает правильную. Поэтому ну его на хер эти commandLink, f param и прочее гавно....
+             *
+             */
+
+
+
+            String nodeID = map.get("nodeID");
+            System.out.print("p (paramTest)----------------->" + nodeID + " ---------------------------- " + this.selectedNode.getType().toUpperCase().toString());
+
+
+        }
+
+    }
+
+
+    public void onNodeSelect(NodeSelectEvent event) {
+
+        this.selectedNode = (TreeNode) event.getTreeNode();
+
+        /**
+         * Вот эта строчка видимо задает какие действия разрешены для текущего юзера. И ее надо будет потом реализовать.
+         *
+         * this.getUserSessionController().setSimpleAction(Consts.actions.viewReportList);
+         *
+         **/
+
+        //-- Сворачиваем/Разворачиваем папку
+        ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNode);
+
+
+        String s = treeNodeController.getServerIDByJSFId(selectedNode.getRowKey());
+
+        String messageText = event.getTreeNode().toString() + " - "+ event.getTreeNode().getType().toString() + ".  id = "  + selectedNode.getRowKey() + " : " + s;
+       // String messageText = event.getTreeNode().toString() + " - "+ event.getTreeNode().getType().toString() + ".  id = "  + treeNodeController.getServerIDByJSFId(selectedNode.getRowKey());
+
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", messageText);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+
+
+        /**
+         * nodeID представляет собой связку из folderID, reportID Если это
+         * так то выбрали "Отчет", если нет то папку
+         */
+      //  if (a.size() == 2) { -- тут мы типа проверем уровень
+            //-- Папка в которой хранится отчет
+      //      ReportFolder f = ReportFolder.getReportFolderByID(getReportFolders(), Integer.parseInt(a.get(0)));
+            //-- Отчет
+      //      Report r = f.getReports().get(Integer.parseInt(a.get(1)));
+            //-- Загружаем в отчет SQL выражения
+     //       r.setSqlClauses(manager.getReportSQLClauses(r.getId()));
+            //-- Выставляем в сессионный бин выбранный отчет
+      //      manager.setReport(r);
+
+      //      this.getUserSessionController().setSimpleAction(Consts.actions.viewReportForm);
+
+
+
+    }
+
+    public void onTestButtonPress(ActionEvent actionEvent) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, this.selectedNode.toString(), null);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
 
     public TreeNode getRoot() {
         return root;
@@ -254,11 +377,11 @@ public class MainBean extends ResoManagedBean implements Serializable {
             String _ReportPath = getReportPath(_PanelNameList.get(i));
 
             //-- kajam 2017-10-31
-       //     File _ReportFile = new File("");
+            //     File _ReportFile = new File("");
 
             //-- Static panel
             //     if (!ResoUtils.isEmpty(_ReportPath)) {
-      //      _ReportFile = new File(_ReportPath);
+            //      _ReportFile = new File(_ReportPath);
             //    }
 //            else {
 //                result = false;
@@ -282,6 +405,17 @@ public class MainBean extends ResoManagedBean implements Serializable {
         return result;
     }
 
+    /**
+     * Отчеты. Форма отчета.
+     *
+     * @return
+     */
+    public String viewReportForm() {
+
+
+        return "1";
+    }
+
 
     private void buildReportFolderTree(DefaultMutableTreeNode node, ArrayList<ReportFolder> array) {
         //-- Список папок в которых хранятся отчеты
@@ -293,7 +427,7 @@ public class MainBean extends ResoManagedBean implements Serializable {
             folderObject.setFolder(f);
             String text = f.getName();
             folderObject.setText(text);
-         //   folderObject.setExpanded(false);
+            //   folderObject.setExpanded(false);
             folderNode.setUserObject(folderObject);
 
             //-- Вложенные папки
@@ -310,16 +444,11 @@ public class MainBean extends ResoManagedBean implements Serializable {
                 reportObject.setCountID(j);
                 String reportText = (r.getName().length() > 70) ? r.getName().substring(0, 70) + "..." : r.getName();
                 reportObject.setText(String.format(Consts.TEMPLATE_SQUARE_TEXT_BRACKET, reportText, r.getId()));
-             //   reportObject.setLeaf(true);
+                //   reportObject.setLeaf(true);
                 reportNode.setUserObject(reportObject);
                 folderNode.add(reportNode);
-                System.out.println("reportObject   =   " + j + " - " + reportObject.toString());
-                System.out.println("reportText   =   " + reportText);
             }
-
-      //      node.add( new DefaultMutableTreeNode("Socrates"));
-            System.out.println("i   =   " + i + text);
-      node.add(folderNode);
+            node.add(folderNode);
         }
     }
 
