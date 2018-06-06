@@ -27,7 +27,6 @@ public class DefaultTreeTest {
 
         treeRoot.add(drink);
         treeRoot.add(sweet);
-
         treeRoot.add(new DefaultMutableTreeNode("Фрукты", true));
 
         for ( int i = 0; i < leafs[0].length; i++)

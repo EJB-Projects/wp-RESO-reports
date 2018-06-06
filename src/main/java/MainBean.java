@@ -2,8 +2,6 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
-
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 
@@ -17,21 +15,14 @@ public class MainBean implements Serializable {
     }
 
     private TreeNode root;
-    private TreeNode root2;
-    private TreeNode root3;
-    private String rootName;
 
-    TreeConverter treeConverter = new TreeConverter();
-    TestRecursive testRecursive = new TestRecursive();
+
+    TreeParse treeParse = new TreeParse();
 
     @PostConstruct
     public void init() {
 
-
-        root3 = testRecursive.Do();
-
-        root2 = treeConverter.doConvert();
-        root = root3;
+        root = treeParse.Do();
 
     }
 
