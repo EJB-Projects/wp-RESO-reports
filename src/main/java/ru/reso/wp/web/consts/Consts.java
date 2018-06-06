@@ -41,4 +41,64 @@ public class Consts {
     public static final String TEMPLATE_SQUARE_TEXT_BRACKET = "%s [%s]";
 
 
+    /**
+     * Enable Actions
+     *
+     * Список возможных действий, в результате которых вызываются одноименные
+     * страницы сайта. Доступ, к которым настроен в файле faces-config.xml в
+     * разделе <navigation-rule>
+     */
+    public static enum actions {
+
+        login, loginCustomer, changePsw, stop, logout, unknown,
+        viewDocument,
+        viewFolderList, viewFolder,
+        viewReportForm, viewReportList, viewReportTaskList, viewReportTask, deleteReportTask,
+        viewNewsList, viewNews,
+        viewSpecialOfferList, viewSpecialOffer,
+        viewActivityResultList, viewActivityResult,
+        viewResoExpressStatisticCalculations,
+        viewResoExpressStatisticPolicies,
+        viewResoExpressStatisticCalculationsByDay,
+        viewResoExpressStatisticCalculationsByMonth,
+        viewResoExpressStatisticCalculationsByBrand,
+        viewResoExpressStatisticCalculationsByModel,
+        viewResoExpressStatisticCalculationsByModelYearPrice,
+        viewFeedBack,
+        viewMarketingPresentationReso,
+        viewMarketingAnalizeRegionMarket,
+        viewMarketingPresentationForClients,
+        viewMarketingMaterialsForAgents,
+        viewMarketingCompareCascoCond,
+        viewMarketingCompareHouseCond,
+        viewOrders,
+        viewCalcCasco,
+        viewResoSchoolEmployees,
+        viewResoSchoolSPBEmployees,
+        viewResoSchoolManagerInsideTrainer,
+        viewResoSchoolManagerStandart,
+        viewResoSchoolProducts,
+        viewOnlineShop,
+        viewKBM,
+        insertOrderData,
+        annulOrderData,
+        viewOnlineShopOrders,
+        incOrder,
+        decOrder,
+        addOrder,
+        delOrder,
+        reCalc,
+        viewROSDelivery,
+        viewPolicy,
+        viewPolicyList,
+        viewGreenCardPolicy,
+        viewGreenCardPolicyList,
+        viewPolicyInvestLife,
+        viewPolicyInvestLifeList,
+        viewPolicyCustomer,
+        viewPolicyListCustomer,
+        viewUndefinedCustomer,
+        viewClient
+    };
+
 }

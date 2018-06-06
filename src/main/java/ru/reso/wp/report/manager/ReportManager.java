@@ -114,7 +114,7 @@ public class ReportManager extends ResoRemoteObject implements Serializable {
 
             /*         //-- Список ролей пользователя в системе отчеты
 
-
+// todo до хрена логики упростили и закаментили пока
 
            String sql = "";
             StmtParamList paramList = new StmtParamList();
@@ -143,50 +143,17 @@ public class ReportManager extends ResoRemoteObject implements Serializable {
             }
 
             rs.close();
-
-
-
-    final String[][] leafs = new String[][]{{"Детализация заполняемости телефонов", "Заполняемость телефонов", "Контактная инфа о страхователе",
-            "Поиск банковских счетов партнера", "Проверка наличия карт ТКБ по филиалу", "Санкции", "Список карт ТКБ"},
-            {"Анкета клиента - индивидуального предпринимателя", "Анкета клиента - иностранного юр.лица", "Анкета клиента - физ.лица", "Анкета клиента - физ.лица - иностранного публичного должностного лица", "Анкета клиента - юр.лица"}};
-    final String[][] leafs2 = new String[][]{{"1111", "Реестр полисов для отправки уведомлений о расторжении"},
-            {"Реестр по страхователю", "Реестр страховых событий"}};
 */
             ReportFolder f = new ReportFolder(268853, "Отчеты по клиентам", 0, 1);
             reportFolders.add(f);
             f = new ReportFolder(8103111, "Персональные данные", 0, 1);
             reportFolders.add(f);
 
-            f = new ReportFolder(8231844, "Детализация заполняемости телефонов", 268853, 2);
-            ReportFolder parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
 
-            f = new ReportFolder(9408629, "Заполняемость телефонов", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-            f = new ReportFolder(8503680, "Контактная информация о страхователе", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
 
-            f = new ReportFolder(8231839, "Поиск банковских счетов партнера", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-            f = new ReportFolder(12968957, "Проверка наличия карт ТКБ по филиалу", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-            f = new ReportFolder(28498881, "Санкции", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-            f = new ReportFolder(28498881, "Список карт ТКБ", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-
-            f = new ReportFolder(28498881, "Поиск банковских счетов партнера", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
 
             f = new ReportFolder(15137434, "Уведомление о расторжении полиса", 268853, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
+            ReportFolder parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
 
             if (parent != null) {
                 parent.getSubFolders().add(f);
@@ -200,50 +167,50 @@ public class ReportManager extends ResoRemoteObject implements Serializable {
                 parent.getSubFolders().add(f);
             }
 
-            f = new ReportFolder(7774711, "Анкета клиента - индивидуального предпринимателя", 8103111, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-
-            f = new ReportFolder(10518454, "Анкета клиента - иностранного юр.лица", 8103111, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-
-            f = new ReportFolder(11221820, "Анкета клиента - физ.лица", 8103111, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-
-            f = new ReportFolder(11556843, "Анкета клиента - физ.лица -  иностранного публичного должностного лица", 8103111, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-
-            f = new ReportFolder(14179895, "Анкета клиента - юр.лица", 8103111, 2);
-            parent = ReportFolder.getReportFolderByID(reportFolders, f.getParentID());
-            parent.getSubFolders().add(f);
-
-
             //-- Заполняем папки отчетами
             setReports("", true, true);
         }
-        System.out.println(Arrays.toString(reportFolders.toArray()));
+     //   System.out.println(Arrays.toString(reportFolders.toArray()));
         return reportFolders;
     }
 
     private void setReports(String s, boolean b, boolean b1) {
 
-        //    while (rs.next()) {
-        Report r = new Report("1111", "panel1, panel2", "This is Description", "reportType");
-        ReportFolder ff = new ReportFolder(15137435, "Уведомление о расторжении полиса", 15137434, 2);
+
+        Report r = new Report(15137434, "1111", "panel1, panel2", "This is Description", "reportType");
+        ReportFolder ff = new ReportFolder(151374341, "Уведомление о расторжении полиса", 15137434, 2);
         ReportFolder parentt = ReportFolder.getReportFolderByID(reportFolders, ff.getParentID());
-        //      ReportFolder f = ReportFolder.getReportFolderByID(reportFolders, r.getFolderID());
 
-        //-- Некоторые отчеты из неиспользуемых папок
+
         if (parentt != null) {
             parentt.getReports().add(r);
         }
 
+        r = new Report(268853, "Детализация заполняемости телефонов", "panel1, panel2", "This is Description", "reportType");
+        ff = new ReportFolder(2688531, "Отчеты по клиентам", 268853, 1);
+        parentt = ReportFolder.getReportFolderByID(reportFolders, ff.getParentID());
+        Report r1 = new Report(268853, "Заполняемость телефонов", "panel1, panel2", "This is Description", "reportType");
+        Report r2 = new Report(268853, "Контактная информация о страхователе", "panel1, panel2", "This is Description", "reportType");
+        Report r3 = new Report(268853, "Поиск банковских счетов партнера", "panel1, panel2", "This is Description", "reportType");
+        Report r4 = new Report(268853, "Проверка наличия карт ТКБ по филиалу", "panel1, panel2", "This is Description", "reportType");
+        Report r5 = new Report(268853, "Санкции", "panel1, panel2", "This is Description", "reportType");
+        Report r6 = new Report(268853, "Список карт ТКБ", "panel1, panel2", "This is Description", "reportType");
+        Report r7 = new Report(268853, "Поиск банковских счетов партнера", "panel1, panel2", "This is Description", "reportType");
 
-        r = new Report("Реестр полисов для отправки уведомлений о расторжении", "panel1, panel2", "This is Description", "reportType");
-        ff = new ReportFolder(15137436, "Уведомление о расторжении полиса", 15137434, 2);
+        if (parentt != null) {
+            parentt.getReports().add(r);
+            parentt.getReports().add(r1);
+            parentt.getReports().add(r2);
+            parentt.getReports().add(r3);
+            parentt.getReports().add(r4);
+            parentt.getReports().add(r5);
+            parentt.getReports().add(r6);
+            parentt.getReports().add(r7);
+        }
+
+
+        r = new Report(15137434, "Реестр полисов для отправки уведомлений о расторжении", "panel1, panel2", "This is Description", "reportType");
+        ff = new ReportFolder(151374341, "Уведомление о расторжении полиса", 15137434, 2);
         parentt = ReportFolder.getReportFolderByID(reportFolders, ff.getParentID());
 
         if (parentt != null) {
@@ -251,23 +218,35 @@ public class ReportManager extends ResoRemoteObject implements Serializable {
         }
 
 
-        r = new Report("Реестр по страхователю", "panel1, panel2", "This is Description", "reportType");
-        ff = new ReportFolder(15137437, "Отчеты по клиентам для ЛК", 28498885, 2);
+        r = new Report(28498885, "Реестр по страхователю", "panel1, panel2", "This is Description", "reportType");
+        ff = new ReportFolder(284988851, "Отчеты по клиентам для ЛК", 28498885, 2);
         parentt = ReportFolder.getReportFolderByID(reportFolders, ff.getParentID());
 
         if (parentt != null) {
             parentt.getReports().add(r);
         }
 
-        r = new Report("Реестр страховых событий", "panel1, panel2", "This is Description", "reportType");
-        ff = new ReportFolder(15137438, "Отчеты по клиентам для ЛК", 28498885, 2);
+        r = new Report(28498885, "Реестр страховых событий", "panel1, panel2", "This is Description", "reportType");
+        ff = new ReportFolder(284988852, "Отчеты по клиентам для ЛК", 28498885, 2);
         parentt = ReportFolder.getReportFolderByID(reportFolders, ff.getParentID());
-        System.out.println("ДОБАВЛЯЕМ ОТЧЕТ   =   " + r.getName());
         parentt.getReports().add(r);
-        //   }
-        //     rs.close();
 
+
+        Report r8 = new Report(8103111, "Анкета клиента - индивидуального предпринимателя", "panel1, panel2", "This is Description", "reportType");
+        ff = new ReportFolder(81031111, "Персональные данные", 8103111, 1);
+        parentt = ReportFolder.getReportFolderByID(reportFolders, ff.getParentID());
+        Report r9 = new Report(8103111, "Анкета клиента - иностранного юр.лица", "panel1, panel2", "This is Description", "reportType");
+        Report r10 = new Report(8103111, "Анкета клиента - физ.лица", "panel1, panel2", "This is Description", "reportType");
+        Report r11 = new Report(8103111, "Анкета клиента - физ.лица -  иностранного публичного должностного лица", "panel1, panel2", "This is Description", "reportType");
+        Report r12 = new Report(8103111, "Анкета клиента - юр.лица", "panel1, panel2", "This is Description", "reportType");
+
+        if (parentt != null) {
+            parentt.getReports().add(r8);
+            parentt.getReports().add(r9);
+            parentt.getReports().add(r10);
+            parentt.getReports().add(r11);
+            parentt.getReports().add(r12);
+        }
     }
-
 
 }

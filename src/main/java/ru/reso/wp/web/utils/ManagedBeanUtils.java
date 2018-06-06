@@ -27,6 +27,8 @@ public class ManagedBeanUtils {
      * @return
      */
     public static UserSessionController getUserSessionController() {
+
+       // аааааааааааа...... понятно! Эта херь возвращает нам объекти типа UserSessionController, но который как бы в сессии уже... То есть работающий....
         return (UserSessionController) FacesUtils.getManagedBean(ManagedBeanConsts.USER_SESSION_CONTROLLER);
     }
 

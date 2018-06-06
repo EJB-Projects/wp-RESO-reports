@@ -12,6 +12,8 @@ import ru.reso.wp.srv.ResoRemoteObject;
 import ru.reso.wp.web.administrator.controller.UserSessionController;
 import ru.reso.wp.web.utils.ManagedBeanUtils;
 
+import javax.annotation.PostConstruct;
+
 public class ResoManagedBean  extends ResoRemoteObject {
 
 
@@ -22,6 +24,12 @@ public class ResoManagedBean  extends ResoRemoteObject {
      */
     public UserSessionController getUserSessionController() {
         return ManagedBeanUtils.getUserSessionController();
+    }
+
+    @PostConstruct
+    @Override
+    protected void postConstruct() {
+        super.postConstruct();
     }
 
 }

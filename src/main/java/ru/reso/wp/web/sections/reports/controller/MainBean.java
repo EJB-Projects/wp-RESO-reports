@@ -1,5 +1,15 @@
 package ru.reso.wp.web.sections.reports.controller;
 
+/**
+ * MAIN TO-DO LIST
+ * <p>
+ * <p>
+ * todo-done:    надо убрать на хуй этот commandLink с его <f:param.
+ * todo-done:     надо найти нормальные id папки/отчета и захерачить их в мапу, потому что пока там ваще пиздец: там id генериться рандомно
+ * todo-done:     надо по этому id научиться выставлять правильную папку и отчет. Ну и пока выводить это все в мессадж.
+ */
+
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,26 +19,20 @@ import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
-
 import javax.servlet.ServletContext;
-
 import ru.reso.wp.report.models.base.ReportFolder;
 import ru.reso.wp.report.manager.ReportManager;
 import ru.reso.wp.report.models.base.Report;
 import ru.reso.wp.web.consts.Consts;
 import ru.reso.wp.web.sections.reports.ResoManagedBean;
 import ru.reso.wp.web.sections.reports.model.ReportFolderUserObject;
-
 import java.io.File;
 import java.util.*;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-
 import ru.reso.wp.web.sections.reports.model.ReportUserObject;
-
 import javax.naming.NamingException;
 
 
@@ -118,130 +122,128 @@ public class MainBean extends ResoManagedBean implements Serializable {
             //root = treeParse.Do();
         } else {
 
-          //  treeParse.setDefaultTreeSwingModel(folderTreeModel);
-         //   root = treeParse.Do();
+            //  treeParse.setDefaultTreeSwingModel(folderTreeModel);
+            //   root = treeParse.Do();
 
             System.out.println("ЩА БУДЕМ ТЕСТИТЬ КОНТРОЛЛЕР НАШ 2");
             treeNodeController = new TreeNodeController(folderTreeModel);
             root = treeNodeController.getTreeNode();
-
-
         }
-
-
-    }
-
-    public void paramTest(ActionEvent actionEvent) {
-
-        System.out.print("selectedNode ----------------->" + this.selectedNode);
-
-        if (selectedNode != null) {
-
-            FacesContext context = FacesContext.getCurrentInstance();
-            Map<String, String> map = context.getExternalContext().getRequestParameterMap();
-
-
-            /**
-             * nodeID представляет собой связку из folderID, reportID Если это
-             * так то выбрали "Отчет", если нет то папку...  - это как бы текст (и соответственно логика) из предыдущей версии (которая на ICEFaces).
-             * Но вот ВОПРОС - надо ли это это в версии для PrimFaces я прям х..й знает. Дело в том, что TreeParse уже работает так, что добавляет к каждой ноде
-             * соответствующее свойство. То есть вот там строчка есть:
-             *
-             * this.addChildNodeRet("childwchild"
-             *
-             * ... вот это вот "childwchild" - это свойство (видимо только у Праймфейсовского дерева) nodeType. Которое потом мы с легкостью используем в Праймфесовском JSF
-             * (то есть на клиенте) например, так:
-             *
-             * <p:treeNode type="childwchild">
-             <p:commandLink id="childNode" upda..... и так далее.....
-             *
-             * .... что позволяет нам уже в самом jsf, то есть, опять же, на клиенте, определять тип ноды и ее соответственно раскрашивать или там как-то обрабатывать. На сколько это удобно в
-             * сравнении с IceFaces - я хз. По мне так было бы как раз удобнее все это пихнуть в UserObject, то есть прописать на сервере (как бы), то есть в Java. Потому, что если появилось такое
-             * желание херачить все это на фронтенде, с понтом дела разделить два кода, аля "у нас появится новый фронтенд-кодер", то имхо лучше было бы сразу переносить это на Спринговый РЕСТ
-             * и нормальный JS фреймворк типа Ангуляра, потому что все эти танцы с бубнами с переносом Ice в Прайм все равно займут до хера времени.
-             *
-             * Но вернемся к нашим баранам - теперь возникает вопрос: а нужна ли нам на хер эта заморочка с таким nodeID, чтобы определить - папка это или лист, если, как я написал выше,
-             * мы уже в TreeParse задаем все это. То есть прям в дереве. ХЗ, короче.... Потаскаю этот nodeId дальше, но по возможности логику обработки постараюсь сводить к nodeType (и если прокатит
-             * то в следущих итерациях/ревизиях/псевдо-коммитах закаменчу и удалю пляски с nodeID.
-             *
-             */
-
-            /** [ROMAB] 16.05.2018 14:55
-             *
-             * ЧТО В ИТОГЕ ВЫЯСНИЛОСЬ: в итоге выяснилось, что все эти танцы с бубнами с записыванием каким-то бля id с помощью Usetobject'в через <f:param... в ноду и геморой сс ее последующим
-             * парсингом через всякие там arraytostring в хер не нужно. Потому, что мой TreeParse уже пихает на этапе парсинга nodeType в дерево и этот тип снимается потом простым
-             * event.getTreeNode().getType().toString(). А там же (в IceFaces) ведь еще id пихался через вот такой простите пиздец -
-             *
-             * result = "N" + String.valueOf(report.getFolderID()) + "N" + getCountID();
-             *
-             * ... То есть сначала, бля, сочинили какую-то говно-строчку с делиметрами ввиде N, потом блин ее парсим. Короче, я все это убираю на хер и определяю тип ноды тупо через Праймфейсовский
-             * nodeType.
-             *
-             *
-             *
-             * И вот еще какая тема. Это событие ActionEvent у CommandLink срабатывает всегда раньше, чем NodeSelectEvent event. Типа только на второе нажатие по одной и той же ноде
-             * selectedNode возвращает правильную. Поэтому ну его на хер эти commandLink, f param и прочее гавно....
-             *
-             */
-
-
-
-            String nodeID = map.get("nodeID");
-            System.out.print("p (paramTest)----------------->" + nodeID + " ---------------------------- " + this.selectedNode.getType().toUpperCase().toString());
-
-
-        }
-
     }
 
 
     public void onNodeSelect(NodeSelectEvent event) {
 
-        this.selectedNode = (TreeNode) event.getTreeNode();
+        try {
 
-        /**
-         * Вот эта строчка видимо задает какие действия разрешены для текущего юзера. И ее надо будет потом реализовать.
-         *
-         * this.getUserSessionController().setSimpleAction(Consts.actions.viewReportList);
-         *
-         **/
+            this.selectedNode = (TreeNode) event.getTreeNode();
 
-        //-- Сворачиваем/Разворачиваем папку
-        ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNode);
+            System.out.println("мы нажали, событие сработало");
 
+            /**
+             * todo Вот эта строчка видимо задает какие действия разрешены для текущего юзера. И ее надо будет потом реализовать.
+             *
+             * this.getUserSessionController().setSimpleAction(Consts.actions.viewReportList);
+             *
+             **/
 
-        String s = treeNodeController.getServerIDByJSFId(selectedNode.getRowKey());
-
-        String messageText = event.getTreeNode().toString() + " - "+ event.getTreeNode().getType().toString() + ".  id = "  + selectedNode.getRowKey() + " : " + s;
-       // String messageText = event.getTreeNode().toString() + " - "+ event.getTreeNode().getType().toString() + ".  id = "  + treeNodeController.getServerIDByJSFId(selectedNode.getRowKey());
-
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", messageText);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+            //-- Сворачиваем/Разворачиваем папку
+            ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNode);
 
 
-        /**
-         * nodeID представляет собой связку из folderID, reportID Если это
-         * так то выбрали "Отчет", если нет то папку
-         */
-      //  if (a.size() == 2) { -- тут мы типа проверем уровень
+            // Определяем - это отчет или папка
+
+            String messageText="";
+
+            if (event.getTreeNode().getType().toString() =="child"){
+                // отчет
+
+                // ищем нужный отчет по id
+                String reportID = treeNodeController.getServerIDByJSFId(selectedNode.getRowKey());
+                System.out.println("ID того что выбрали + " + reportID);
+                Report report = Report.getReportByID(getReportFolders(), reportID);
+
+                // понимаем parentid
+                int folderID = report.getFolderID();
+
+                // ищем папку по номеру id
+                ReportFolder f = ReportFolder.getReportFolderByID(getReportFolders(), folderID);
+                System.out.println("мы нашли папку #" + f.getName());
+                System.out.println("Сучка, мы тя выловили блин - " + report.getName());
+                System.out.println("А папочка у этого отчетика у нас = " + folderID);
+
+                String s = treeNodeController.getServerIDByJSFId(selectedNode.getRowKey()) + " : "+f.getName() + " : " + report.getName() + " : " + String.valueOf(folderID);
+                messageText = event.getTreeNode().toString() + " - " + event.getTreeNode().getType().toString() + ".  id = " + selectedNode.getRowKey() + " : " + s;
+
+
+            } else {
+                //папка
+
+                System.out.println("А это папка ");
+                String nodeID = treeNodeController.getServerIDByJSFId(selectedNode.getRowKey());
+
+
+                String s = treeNodeController.getServerIDByJSFId(selectedNode.getRowKey()) + " : "+ nodeID;
+                messageText = event.getTreeNode().toString() + " - " + event.getTreeNode().getType().toString() + ".  id = " + selectedNode.getRowKey() + " : " + s;
+            }
+
+
+
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", messageText);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
+
+            /**
+             * todo-done: теперь надо надо еще как-то определить отчет/папка отчетов
+             *
+             * Тут как может быть? Кейса 2
+             *
+             * 1) мы щелкнули папку отчета? Окей, взяли id папки
+             * 2) мы щелкнули отчет/вроженную папку - взяли id напрямую, вытащили id родительской папки
+             *
+             */
+
+
+            /**
+             * nodeID представляет собой связку из folderID, reportID Если это
+             * так то выбрали "Отчет", если нет то папку
+             */
+            //  if (a.size() == 2) { -- тут мы типа проверем уровень
             //-- Папка в которой хранится отчет
-      //      ReportFolder f = ReportFolder.getReportFolderByID(getReportFolders(), Integer.parseInt(a.get(0)));
+            //
+         //   ReportFolder f = ReportFolder.getReportFolderByID(getReportFolders(), Integer.parseInt(a.get(0)));
+
             //-- Отчет
-      //      Report r = f.getReports().get(Integer.parseInt(a.get(1)));
+            //      Report r = f.getReports().get(Integer.parseInt(a.get(1)));
             //-- Загружаем в отчет SQL выражения
-     //       r.setSqlClauses(manager.getReportSQLClauses(r.getId()));
+            //       r.setSqlClauses(manager.getReportSQLClauses(r.getId()));
             //-- Выставляем в сессионный бин выбранный отчет
-      //      manager.setReport(r);
+            //      manager.setReport(r);
 
-      //      this.getUserSessionController().setSimpleAction(Consts.actions.viewReportForm);
+            /**
+             * Потратил пол дня на эту шнягу. На самом деле, если выкинуть всякие хери связанные с текущим юзером, авторизацией и прочим - там миллион наследующихся друг от друга объектов
+             * а в итоге просто в свойство action класса UserSessionController подставляется некий экшен ввиде строки.
+              */
 
 
+                  this.getUserSessionController().setSimpleAction(Consts.actions.viewReportForm);
+            FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "viewReportForm.xhtml");
+            //FacesContext.getCurrentInstance (). getExternalContext (). Redirect (url);
+
+
+        } catch (Exception e) {
+//            errorMessage = Notes.noteInnerError;
+//            ru.reso.wp.web.utils.Utils.sendError(e);
+        }
 
     }
 
     public void onTestButtonPress(ActionEvent actionEvent) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, this.selectedNode.toString(), null);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        System.out.println("We are in onTestButtonPress");
+       // FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "   ПИЗДЕЦ", null);
+       // FacesContext.getCurrentInstance().addMessage(null, message);
+
+
     }
 
 
@@ -325,9 +327,10 @@ public class MainBean extends ResoManagedBean implements Serializable {
 
         System.out.println("Мы в getReportFolders...");
         ArrayList<ReportFolder> result = null;
-        System.out.println("Прошли ArrayList...");
+
         /* Если это клиент */
-        //    if (((UserEmployeeProfile) this.getUserSessionController().getUser().getProfile()).hasModule(UserConsts.WEB_CLAIM)) {
+        // todo до хрена логики упростили и закаментили пока
+        // if (((UserEmployeeProfile) this.getUserSessionController().getUser().getProfile()).hasModule(UserConsts.WEB_CLAIM)) {
         if (manager == null) System.out.println("Менеджер - нуль");
 
         result = manager.getReportFoldersClient();
@@ -426,7 +429,9 @@ public class MainBean extends ResoManagedBean implements Serializable {
             ReportFolderUserObject folderObject = new ReportFolderUserObject(folderNode);
             folderObject.setFolder(f);
             String text = f.getName();
-            folderObject.setText(text);
+            //folderObject.setText(text);
+            folderObject.setText(String.format(Consts.TEMPLATE_SQUARE_TEXT_BRACKET, text, f.getId()));
+
             //   folderObject.setExpanded(false);
             folderNode.setUserObject(folderObject);
 

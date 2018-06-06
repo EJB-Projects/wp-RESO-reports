@@ -10,17 +10,17 @@ import java.util.Map;
 
 public class TreeNodeController {
 
-    private Map<String, Integer> hashMap = new HashMap<String, Integer>();
+    private Map<String, String> hashMap = new HashMap<String, String>();
     private TreeNode treeNode;
     TreeParse treeParse = new TreeParse();
 
 
-    public Map<String, Integer> getHashMap() {
+    public Map<String, String> getHashMap() {
         return hashMap;
     }
 
-    public void addEntry(String string, int i) {
-        this.hashMap.put(string, i);
+    public void addEntry(String key, String value) {
+        this.hashMap.put(key, value);
     }
 
     public String getServerIDByJSFId(String key){
@@ -34,12 +34,12 @@ public class TreeNodeController {
         this.hashMap = treeParse.getMap();
 
         if (this.hashMap == null){
-            System.out.println("MAP IS NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUllll");
+            System.out.println("MAP IS NULL");
         } else {
 
-            System.out.println("                --------------------------- MAP IS not null");
+            //System.out.println("                --------------------------- MAP IS not null");
 
-            for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
+            for (Map.Entry<String, String> entry : hashMap.entrySet()) {
                 System.out.println(entry.getKey()+" : "+entry.getValue());
             }
 
@@ -52,33 +52,23 @@ public class TreeNodeController {
         this.hashMap = treeParse.getMap();
 
         if (this.hashMap == null){
-            System.out.println("MAP IS NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUllll");
+            System.out.println("MAP IS NULL");
         } else {
 
-            System.out.println("                --------------------------- MAP IS not null");
+         //   System.out.println("                --------------------------- MAP IS not null");
 
-            for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
+            for (Map.Entry<String, String> entry : hashMap.entrySet()) {
                 System.out.println(entry.getKey()+" : "+entry.getValue());
             }
-
         }
     }
 
 
-
-
-
     public TreeNode getTreeNode() {
-
-       // this.treeNode = treeParse.Do();
         return treeNode;
     }
 
-    /*public void setTreeNode(TreeNode treeNode) {
-        this.treeNode = treeNode;
-    }
 
-    */
 
 }
 

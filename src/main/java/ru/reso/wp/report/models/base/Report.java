@@ -113,12 +113,37 @@ public class Report implements java.io.Serializable {
      * [ROMAB] 08.05.2018 14:23.
      * Мой "болваночный" конструктор для тестирования....
      *
-     * @param rs
+     * @param
      * @throws SQLException
      */
     public Report(String reportName, String panelsList, String desc, String repType) {
         id = String.valueOf(getRandomNumberInRange(2000, 100000));
         folderID = getRandomNumberInRange(2000, 100000);
+        this.name = reportName;
+        panelString = panelsList;
+        panelString = (panelString == null) ? panelString : panelString.toUpperCase();
+        description = desc;
+        reportType = repType;
+        source = new ReportSource(1, "test");
+        group = getRandomNumberInRange(2000, 100000);
+        reportBlank = null;
+    }
+
+    /**
+     * Constructor
+     * <p>
+     * [ROMAB] 18.05.2018 09:57.
+     * Мой второй "болваночный" конструктор для тестирования. Оказалось, что поле @folderID все же нужно. Это собственно и есть папка, в которой лежит отчет. То судя по всему такой некий parentID.
+     * Как вообще и кем БД заполняется - это тоже отдельный вопрос. Где гарантия, что у отчета будет именно правильный folderID? По хорошему какие-то внутренние системы проверки надо вставлять,
+     * мне кажется. Ну до Бог с ним. В общем, поэтому мы делаем вот такой второй конструктор, чтобы пока временно (мы же пока собственные данные накидываем "болваночные, пока нет БД) создавать
+     * отчеты с правильными folderID.
+     *
+     * @param
+     * @throws SQLException
+     */
+    public Report(int parentFolderId, String reportName, String panelsList, String desc, String repType) {
+        id = String.valueOf(getRandomNumberInRange(2000, 100000));
+        folderID = parentFolderId;
         this.name = reportName;
         panelString = panelsList;
         panelString = (panelString == null) ? panelString : panelString.toUpperCase();
@@ -354,10 +379,21 @@ public class Report implements java.io.Serializable {
         Report result = null;
         Iterator i = a.iterator();
 
+     //   System.out.println(" < -- ПЕЧАТАЕМ ВЕСЬ ЛИСТ -- > ");
+     //   System.out.println("String id -- > " + id);
+
+        for(ReportFolder elem : a){
+     //       System.out.println("===> " + elem.getName() + "  ");
+        }
+
+
         while ((i.hasNext()) && (result == null)) {
             ReportFolder f = (ReportFolder) i.next();
+            System.out.println("О Т Ч Е Т И К = " + f.getName() + " : " + f.getId());
             for (int j = 0; j < f.getReports().size(); j++) {
+
                 Report r = f.getReports().get(j);
+              //  System.out.println("О Т Ч Е Т = " + r.getName() + " : " + r.getId() + " : " + id);
                 if (r.getId().equalsIgnoreCase(id)) {
                     result = r;
                 }

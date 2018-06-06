@@ -21,7 +21,7 @@ public class TreeParse {
     private TreeNode root;
     public Integer level = 0;
     //private TreeNodeController treeNodeController = new TreeNodeController();
-    private Map<String, Integer> keyMap = new HashMap<String, Integer>();
+    private Map<String, String> keyMap = new HashMap<String, String>();
     // Тестовая болванка со Свинговым деревом. На боевом объекте (видимо в следующей версии) будем пихать это хозяйство уже как параметр
     DefaultTreeTest defaultTreeTest = new DefaultTreeTest();
     // Свинговое дерево-объект, в который зальем выдачу "болванки" ru.reso.wp.web.sections.reports.controller.DefaultTreeTest
@@ -66,12 +66,36 @@ public class TreeParse {
     // @selectedNode - в какую ветку собственно добавлять. То есть кто папа. Тип - TreeNode
     public TreeNode addChildNodeRet(String nodeType, String newNodeName, TreeNode selectedNode) {
 
-        TreeNode newNode = new DefaultTreeNode(nodeType, newNodeName, selectedNode);
 
-        Random r = new Random();
-        int itid = 10 + r.nextInt((100 - 1) + 1) + 1;
+        /**
+         * Вытаскиваем значение id. Если Это папка - то на хер срезаем отображение idNode. Если отчет - то зачем-то он им нужен в дереве. Кстати, а где-нить есть проверка
+         * на null? А если кто что-то пойдет не так и отчет или папка будет нуль? Тут вариант 2.
+         *
+         * 1) назвать его "Без имени" и чих пых бы с ним. Но что тогда делать с id? Тогда надо какой-то обработки id пихать на событие nodeselect
+         * 2) выкидывать какой-то эксепшн наверх с каким-то последующим эзерфрендли месседжем и дальше юзера не пускать.
+         *
+         * По хорошему надо поставить в todo и обработать это потом
+         */
+
+        String convertedNodeName;
+        String nodeId;
+
+                if (nodeType=="child"){
+
+                    convertedNodeName = newNodeName;
+                    nodeId = newNodeName.substring(newNodeName.indexOf('[')+1, newNodeName.indexOf(']'));
+
+                } else {
+                    convertedNodeName = newNodeName.substring(0, newNodeName.indexOf('['));
+                    nodeId = newNodeName.substring(newNodeName.indexOf('[')+1, newNodeName.indexOf(']'));
+                }
+
+        TreeNode newNode = new DefaultTreeNode(nodeType, convertedNodeName, selectedNode);
+
+      //  Random r = new Random();
+       // int itid = 10 + r.nextInt((100 - 1) + 1) + 1;
         String rowK = newNode.getRowKey();
-        keyMap.put(rowK, itid);
+        keyMap.put(rowK, nodeId);
         return newNode;
     }
 
@@ -96,6 +120,15 @@ public class TreeParse {
              * - взяли у текущей свинговой ноды объект в формате свингового TreeNode.  По нему будет бегать наш рекурсивный NodeCycle.
              */
             TreeNode newNode = this.addChildNodeRet("parent", (defaultTreeSwingModel.getChild((defaultTreeSwingModel.getRoot()), i).toString()), root);
+
+
+            /**
+             * Вытащим ка значение id отчета
+             */
+
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            System.out.println(defaultTreeSwingModel.getChild((defaultTreeSwingModel.getRoot()), i));
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
             // выбираем текущую ноду по итератору цикла чтобы к ней обращаться
             javax.swing.tree.TreeNode o = (javax.swing.tree.TreeNode) defaultTreeSwingModel.getChild(swingTree.getRoot(), i);
