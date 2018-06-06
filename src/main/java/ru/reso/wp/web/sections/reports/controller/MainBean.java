@@ -1,38 +1,38 @@
 package ru.reso.wp.web.sections.reports.controller;
 
-/**
- * MAIN TO-DO LIST
- * <p>
- * <p>
- * todo-done:    надо убрать на хуй этот commandLink с его <f:param.
- * todo-done:     надо найти нормальные id папки/отчета и захерачить их в мапу, потому что пока там ваще пиздец: там id генериться рандомно
- * todo-done:     надо по этому id научиться выставлять правильную папку и отчет. Ну и пока выводить это все в мессадж.
- */
-
 
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.event.ActionEvent;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
+
 import javax.servlet.ServletContext;
+
+import ru.reso.wp.report.models.base.Document;
+import ru.reso.wp.report.models.base.DocumentService;
 import ru.reso.wp.report.models.base.ReportFolder;
 import ru.reso.wp.report.manager.ReportManager;
 import ru.reso.wp.report.models.base.Report;
 import ru.reso.wp.web.consts.Consts;
 import ru.reso.wp.web.sections.reports.ResoManagedBean;
 import ru.reso.wp.web.sections.reports.model.ReportFolderUserObject;
+
 import java.io.File;
 import java.util.*;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+
 import ru.reso.wp.web.sections.reports.model.ReportUserObject;
+
 import javax.naming.NamingException;
 
 
@@ -41,6 +41,13 @@ import javax.naming.NamingException;
 public class MainBean extends ResoManagedBean implements Serializable {
     public static final String BEAN_NAME = "mainBean";
     private TreeNode root;
+    private TreeNode rootID;
+    private TreeNode root1;
+
+    @ManagedProperty("#{documentService}")
+    private DocumentService service;
+    private Document selectedNodeObject;
+
 
     public String getBeanName() {
         return BEAN_NAME;
@@ -66,11 +73,16 @@ public class MainBean extends ResoManagedBean implements Serializable {
     private String errorMessage;
 
 
-    //TreeParse treeParse = new TreeParse(folderTreeModel);
-    TreeParse treeParse = new TreeParse();
+//    TreeParse treeParse = new TreeParse();
 
 
     private TreeNode selectedNode;
+    private String selectedNodeName;
+
+    public Document getSelectedNodeObject() {
+        return selectedNodeObject;
+    }
+
 
     public TreeNode getSelectedNode() {
         return selectedNode;
@@ -111,42 +123,29 @@ public class MainBean extends ResoManagedBean implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Прошли инициализацию");
+
+        //   System.out.println("Прошли инициализацию");
 
         if (folderTreeModel == null) {
 
-            System.out.println("ЩА БУДЕМ ТЕСТИТЬ КОНТРОЛЛЕР НАШ");
-            treeNodeController = new TreeNodeController();
-
+            treeNodeController = new TreeNodeController(this);
+            //treeNodeController.setReportController(this);
             root = treeNodeController.getTreeNode();
-            //root = treeParse.Do();
+
         } else {
 
-            //  treeParse.setDefaultTreeSwingModel(folderTreeModel);
-            //   root = treeParse.Do();
 
-            System.out.println("ЩА БУДЕМ ТЕСТИТЬ КОНТРОЛЛЕР НАШ 2");
-            treeNodeController = new TreeNodeController(folderTreeModel);
+            treeNodeController = new TreeNodeController(folderTreeModel, this);
             root = treeNodeController.getTreeNode();
+
         }
     }
 
 
     public void onNodeSelect(NodeSelectEvent event) {
 
-        try {
 
-            this.selectedNode = (TreeNode) event.getTreeNode();
-
-            System.out.println("мы нажали, событие сработало");
-
-            /**
-             * todo Вот эта строчка видимо задает какие действия разрешены для текущего юзера. И ее надо будет потом реализовать.
-             *
-             * this.getUserSessionController().setSimpleAction(Consts.actions.viewReportList);
-             *
-             **/
-
+/*
             //-- Сворачиваем/Разворачиваем папку
             ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNode);
 
@@ -193,23 +192,9 @@ public class MainBean extends ResoManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, message);
 
 
-            /**
-             * todo-done: теперь надо надо еще как-то определить отчет/папка отчетов
-             *
-             * Тут как может быть? Кейса 2
-             *
-             * 1) мы щелкнули папку отчета? Окей, взяли id папки
-             * 2) мы щелкнули отчет/вроженную папку - взяли id напрямую, вытащили id родительской папки
-             *
-             */
 
-
-            /**
-             * nodeID представляет собой связку из folderID, reportID Если это
-             * так то выбрали "Отчет", если нет то папку
-             */
             //  if (a.size() == 2) { -- тут мы типа проверем уровень
-            //-- Папка в которой хранится отчет
+
             //
          //   ReportFolder f = ReportFolder.getReportFolderByID(getReportFolders(), Integer.parseInt(a.get(0)));
 
@@ -220,14 +205,11 @@ public class MainBean extends ResoManagedBean implements Serializable {
             //-- Выставляем в сессионный бин выбранный отчет
             //      manager.setReport(r);
 
-            /**
-             * Потратил пол дня на эту шнягу. На самом деле, если выкинуть всякие хери связанные с текущим юзером, авторизацией и прочим - там миллион наследующихся друг от друга объектов
-             * а в итоге просто в свойство action класса UserSessionController подставляется некий экшен ввиде строки.
-              */
+                              this.getUserSessionController().setSimpleAction(Consts.actions.viewReportForm);
 
 
-                  this.getUserSessionController().setSimpleAction(Consts.actions.viewReportForm);
             FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "viewReportForm.xhtml");
+
             //FacesContext.getCurrentInstance (). getExternalContext (). Redirect (url);
 
 
@@ -235,15 +217,78 @@ public class MainBean extends ResoManagedBean implements Serializable {
 //            errorMessage = Notes.noteInnerError;
 //            ru.reso.wp.web.utils.Utils.sendError(e);
         }
+*/
+    }
+
+    public void SomeAction(ActionEvent actionEvent) {
+
+        FacesMessage message = new FacesMessage();
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String action = params.get("action");
+        String id = params.get("motor");
+        message = new FacesMessage("1", action + " : " + id);
+        message.setSeverity(FacesMessage.SEVERITY_WARN);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+
+        //this.selectedNode = (TreeNode) actionEvent.
+        //    System.out.println("мы в onNodeSelect");
+        //  ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNode);
+
+
+        // todo теперь надо попробовать по id определить selectedNode. Точнее его установить. Это задачка не простая
+
 
     }
 
+    public String doSomeAction() {
+
+
+        //FacesMessage message = new FacesMessage();
+
+        //     if (!(selectedNode == null)) {
+
+
+        //    Map<String,String> params = FacesContext.getExternalContext().getRequestParameterMap();
+        //    String action = params.get("action");
+
+        //        message = new FacesMessage(FacesMessage.SEVERITY_WARN, this.selectedNode.toString(), null);
+
+        /**
+
+         **/
+        //     message = new FacesMessage(FacesMessage.SEVERITY_WARN, selectedNode.toString(), null);
+        //     System.out.println("Ноль");
+
+
+        //  } else {
+        //         message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Ноль", null);
+        //         System.out.println("Ноль");
+        //    }
+
+        //      FacesContext.getCurrentInstance().addMessage(null, message);
+
+        //      return "viewReportForm";
+        return "";
+    }
+
     public void onTestButtonPress(ActionEvent actionEvent) {
-        System.out.println("We are in onTestButtonPress");
-       // FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "   ПИЗДЕЦ", null);
-       // FacesContext.getCurrentInstance().addMessage(null, message);
 
+        FacesMessage message = new FacesMessage();
 
+       /* if (!(selectedNode == null)) {
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, this.selectedNode.toString(), null);
+        } else {
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Ноль", null);
+        }
+*/
+
+        if (!(selectedNodeObject == null)) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, this.selectedNodeObject.toString(), null);
+        } else {
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Ноль", null);
+        }
+
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
 
@@ -371,11 +416,11 @@ public class MainBean extends ResoManagedBean implements Serializable {
 
         ArrayList<String> _PanelNameList = aReport.getPanels();
 
-        for (int i = 0; i < _PanelNameList.size(); i++) {
+        /*for (int i = 0; i < _PanelNameList.size(); i++) {
             System.out.println(Arrays.deepToString(new String[]{_PanelNameList.get(i)}));
         }
 
-
+*/
         for (int i = 0; i < _PanelNameList.size(); i++) {
             String _ReportPath = getReportPath(_PanelNameList.get(i));
 
@@ -415,8 +460,55 @@ public class MainBean extends ResoManagedBean implements Serializable {
      */
     public String viewReportForm() {
 
+        String type;
+        String predicat;
+        String outcome;
+        //    try {
 
-        return "1";
+        //   this.selectedNode = (TreeNode) event.getTreeNode();
+        // System.out.println("мы в onNodeSelect");
+
+        /**
+         * todo Вот эта строчка видимо задает какие действия разрешены для текущего юзера. И ее надо будет потом реализовать.
+         *
+         * this.getUserSessionController().setSimpleAction(Consts.actions.viewReportList);
+         *
+         **/
+
+
+        //-- Сворачиваем/Разворачиваем папку
+
+        if (selectedNodeObject.getType() == "parent") {
+
+            type = "parent";
+            predicat = "Выбрана папка [parent]";
+            ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNodeObject.getCurrentNode());
+            outcome = "";
+
+        } else if (selectedNodeObject.getType() == "childwchild") {
+
+            type = "childwchild";
+            predicat = "Выбрана папка [childwchild]";
+            ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNodeObject.getCurrentNode());
+            outcome = "";
+        } else {
+
+            predicat = "Выбрано что-то другое";
+            // predicat = selectedNodeObject.getType();
+            outcome = "viewReportForm";
+        }
+        //   if (selectedNode.getType().toString() == "parent") {
+
+        //        ru.reso.wp.web.utils.Utils.rollExpandTreeNode(selectedNode);
+        //    } else {
+
+        //        this.setSelectedNodeName("Pipisechka");
+        //      }
+
+
+        String selectedFolder = selectedNodeObject.getName();
+        this.setSelectedNodeName(predicat + " - " + selectedFolder);
+        return outcome;
     }
 
 
@@ -425,15 +517,13 @@ public class MainBean extends ResoManagedBean implements Serializable {
         for (int i = 0; i < array.size(); i++) {
             ReportFolder f = array.get(i);
             DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode();
-            //ReportFolderUserObject folderObject = new ReportFolderUserObject(folderNode, this);
             ReportFolderUserObject folderObject = new ReportFolderUserObject(folderNode);
             folderObject.setFolder(f);
             String text = f.getName();
-            //folderObject.setText(text);
             folderObject.setText(String.format(Consts.TEMPLATE_SQUARE_TEXT_BRACKET, text, f.getId()));
-
-            //   folderObject.setExpanded(false);
             folderNode.setUserObject(folderObject);
+
+            System.out.println("buildReportFolderTree - Добавляем папки");
 
             //-- Вложенные папки
             if (f.getSubFolders().size() > 0) {
@@ -449,7 +539,6 @@ public class MainBean extends ResoManagedBean implements Serializable {
                 reportObject.setCountID(j);
                 String reportText = (r.getName().length() > 70) ? r.getName().substring(0, 70) + "..." : r.getName();
                 reportObject.setText(String.format(Consts.TEMPLATE_SQUARE_TEXT_BRACKET, reportText, r.getId()));
-                //   reportObject.setLeaf(true);
                 reportNode.setUserObject(reportObject);
                 folderNode.add(reportNode);
             }
@@ -457,5 +546,31 @@ public class MainBean extends ResoManagedBean implements Serializable {
         }
     }
 
+    public TreeNode getRootID() {
+        return rootID;
+    }
 
+    public void setRootID(TreeNode rootID) {
+        this.rootID = rootID;
+    }
+
+    public TreeNode getRoot1() {
+        return root1;
+    }
+
+    public void setService(DocumentService service) {
+        this.service = service;
+    }
+
+    public void setSelectedNodeObject(Document selectedNodeObject) {
+        this.selectedNodeObject = selectedNodeObject;
+    }
+
+    public void setSelectedNodeName(String selectedNodeName) {
+        this.selectedNodeName = selectedNodeName;
+    }
+
+    public String getSelectedNodeName() {
+        return selectedNodeName;
+    }
 }

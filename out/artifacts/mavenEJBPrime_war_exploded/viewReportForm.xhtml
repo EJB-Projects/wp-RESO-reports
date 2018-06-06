@@ -9,22 +9,20 @@
 
 <f:view>
    <h:head>
-      <title>JSF Title</title>
+      <title>Selected folder/Report</title>
    </h:head>
 
    <h:body>
       <f:facet name="last">
          <h:outputStylesheet library="css" name="reso.css" />
       </f:facet>
+
       <h:panelGrid title="JSF panelGrid Title" border="10" columns="2">
-
-         <h:outputLabel value="JSF standart label"/>
-         <h:button value="JSF default button" title="JSF button Title" outcome="nextPage"/>
-
+         <h:button value="Goback" title="Go back" outcome="index"/>
       </h:panelGrid>
 
 
-      <h:outputText id="display" value="Пиздец!!!" />
+      <h:outputText id="display" value="#{mainBean.selectedNodeName}" />
 
    </h:body>
 </f:view>

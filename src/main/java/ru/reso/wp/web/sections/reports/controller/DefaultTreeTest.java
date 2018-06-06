@@ -53,7 +53,7 @@ public class DefaultTreeTest {
         for ( int i = 0; i < leafs2[1].length; i++)
             clientRep11.add(new DefaultMutableTreeNode(leafs2[1][i], false));
 
-    //-------------------
+
 
         for ( int i = 0; i < leafs[1].length; i++)
             sweet.add(new DefaultMutableTreeNode(leafs[1][i], false));
@@ -67,19 +67,7 @@ public class DefaultTreeTest {
     }
 
 
-    public void createNodes(DefaultMutableTreeNode top) {
 
-        DefaultMutableTreeNode category = null;
-        DefaultMutableTreeNode book = null;
-
-        category = new DefaultMutableTreeNode("Books for Java Programmers");
-        top.add(category);
-
-        //original Tutorial
-        book = new DefaultMutableTreeNode("The Java Tutorial: A Short Course on the Basics");
-        category.add(book);
-        // return null;
-    }
 
 
 }

@@ -170,7 +170,7 @@ public class ReportManager extends ResoRemoteObject implements Serializable {
             //-- Заполняем папки отчетами
             setReports("", true, true);
         }
-     //   System.out.println(Arrays.toString(reportFolders.toArray()));
+
         return reportFolders;
     }
 

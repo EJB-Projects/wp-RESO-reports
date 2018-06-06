@@ -2,12 +2,12 @@ package ru.reso.wp.web.sections.reports.controller;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
+import ru.reso.wp.report.models.base.Document;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+
 
 //Конвертер Swing Default Tree (который работает с IceFaces) в PrimeFaces TreeNode
 //
@@ -19,6 +19,12 @@ import java.util.Random;
 public class TreeParse {
 
     private TreeNode root;
+    private TreeNode idTree;
+    private Boolean idFillTurnOn = false;
+    private MainBean reportController;
+
+
+
     public Integer level = 0;
     //private TreeNodeController treeNodeController = new TreeNodeController();
     private Map<String, String> keyMap = new HashMap<String, String>();
@@ -33,6 +39,7 @@ public class TreeParse {
         defaultTreeSwingModel = defaultTreeTest.Do();
         // Берем рут (корень) от этого свингового дерева, чтобы от него "плясать" (парсить). Причем берем/задаем именно уже Праймфейсовский корень. root - это праймфесофская верхушка
         root = new DefaultTreeNode(defaultTreeSwingModel.getRoot().toString(), null);
+        idTree = new DefaultTreeNode("0", null);
     }
 
     // Второй конструктор, который подпихивает дерево Swing уже как параметр. Его дальше и будем парсить...
@@ -40,11 +47,11 @@ public class TreeParse {
 
         this.defaultTreeSwingModel = treeModel;
         root = new DefaultTreeNode(defaultTreeSwingModel.getRoot().toString(), null);
+        idTree = new DefaultTreeNode("0", null);
     }
 
 
     public Map getMap() {
-
         return keyMap;
     }
 
@@ -57,6 +64,14 @@ public class TreeParse {
         // запускаем первый цикл. Он не рекурсивный. Все самое интересное - далее.
         ForCycle(defaultTreeSwingModel, i);
         // Возвращаем уже наполненное праймфейсофское дерево
+        return root;
+
+    }
+
+    public TreeNode Do(MainBean reportController) {
+       this.reportController = reportController;
+        int i = this.ChildrenForRootCount(defaultTreeSwingModel);
+        ForCycle(defaultTreeSwingModel, i);
         return root;
 
     }
@@ -79,21 +94,24 @@ public class TreeParse {
 
         String convertedNodeName;
         String nodeId;
+        String parentNodeId;
 
-                if (nodeType=="child"){
+        if (nodeType == "child") {
+            convertedNodeName = newNodeName;
+            nodeId = newNodeName.substring(newNodeName.indexOf('[') + 1, newNodeName.indexOf(']'));
+            //parentNodeId = selectedNode.g
+            //        newNodeName.substring(newNodeName.indexOf('[') + 1, newNodeName.indexOf(']'));
 
-                    convertedNodeName = newNodeName;
-                    nodeId = newNodeName.substring(newNodeName.indexOf('[')+1, newNodeName.indexOf(']'));
+        } else {
+            convertedNodeName = newNodeName.substring(0, newNodeName.indexOf('['));
+            nodeId = newNodeName.substring(newNodeName.indexOf('[') + 1, newNodeName.indexOf(']'));
+        }
 
-                } else {
-                    convertedNodeName = newNodeName.substring(0, newNodeName.indexOf('['));
-                    nodeId = newNodeName.substring(newNodeName.indexOf('[')+1, newNodeName.indexOf(']'));
-                }
+        Document document = new Document(reportController, convertedNodeName, nodeId, nodeType);
+        //TreeNode newNode = new DefaultTreeNode(nodeType, new Document(reportController, convertedNodeName, nodeId, nodeType), selectedNode);
+        TreeNode newNode = new DefaultTreeNode(nodeType, document, selectedNode);
+        document.setCurrentNode(newNode);
 
-        TreeNode newNode = new DefaultTreeNode(nodeType, convertedNodeName, selectedNode);
-
-      //  Random r = new Random();
-       // int itid = 10 + r.nextInt((100 - 1) + 1) + 1;
         String rowK = newNode.getRowKey();
         keyMap.put(rowK, nodeId);
         return newNode;
@@ -119,16 +137,18 @@ public class TreeParse {
              *      пихнем в NodeCycle позже, чтобы он знал куда пихать то, что он спарсит.
              * - взяли у текущей свинговой ноды объект в формате свингового TreeNode.  По нему будет бегать наш рекурсивный NodeCycle.
              */
+           // if (idFillTurnOn){
             TreeNode newNode = this.addChildNodeRet("parent", (defaultTreeSwingModel.getChild((defaultTreeSwingModel.getRoot()), i).toString()), root);
+          //  TreeNode newNodeID = this.addChildNodeRet("parent", "01", root);
 
 
             /**
              * Вытащим ка значение id отчета
              */
 
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            System.out.println(defaultTreeSwingModel.getChild((defaultTreeSwingModel.getRoot()), i));
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        //    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        //   System.out.println(defaultTreeSwingModel.getChild((defaultTreeSwingModel.getRoot()), i));
+        //    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
             // выбираем текущую ноду по итератору цикла чтобы к ней обращаться
             javax.swing.tree.TreeNode o = (javax.swing.tree.TreeNode) defaultTreeSwingModel.getChild(swingTree.getRoot(), i);
@@ -167,6 +187,7 @@ public class TreeParse {
                 // добавляем найденное -> в PrimeFaces ноду
 
                 TreeNode newInternalNode;
+               // TreeNode newInternalNodeID;
 
                 //Проверяем уровень вложенности
                 //     if (level == 1) {
@@ -183,6 +204,7 @@ public class TreeParse {
                  */
                 if (defaultTreeSwingModel.getChildCount(leaf) > 0) {
                     Integer l = level + 1;
+                    //newInternalNodeID = this.addChildNodeRet("childwchild", "0101", currentNode);
                     newInternalNode = this.addChildNodeRet("childwchild", (leaf.toString() + " - " + l.toString()), currentNode);
                     level = level + 1;
                     NodeCycle(leaf, newInternalNode);
@@ -213,5 +235,21 @@ public class TreeParse {
 
     public void setDefaultTreeSwingModel(DefaultTreeModel defaultTreeSwingModel) {
         this.defaultTreeSwingModel = defaultTreeSwingModel;
+    }
+
+    public TreeNode getIDTree() {
+        idFillTurnOn = true;
+        int i = this.ChildrenForRootCount(defaultTreeSwingModel);
+        ForCycle(defaultTreeSwingModel, i);
+        return idTree;
+
+    }
+
+    public MainBean getReportController() {
+        return reportController;
+    }
+
+    public void setReportController(MainBean reportController) {
+        this.reportController = reportController;
     }
 }

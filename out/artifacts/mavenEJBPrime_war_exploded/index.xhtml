@@ -16,17 +16,12 @@
       <f:facet name="last">
          <h:outputStylesheet library="css" name="reso.css" />
       </f:facet>
-      <h:panelGrid title="JSF panelGrid Title" border="10" columns="2">
 
-         <h:outputLabel value="JSF standart label"/>
-         <h:button value="JSF default button" title="JSF button Title" outcome="nextPage"/>
-
-      </h:panelGrid>
 
       <br/>
       <h:form id="buttonform">
          <p:growl id="growl" life="2000" />
-         <p:commandButton value="Ajax Submit" id="ajaxOld" update="growl" actionListener="#{mainBean.onTestButtonPress}" styleClass="ui-priority-primary" />
+
       </h:form>
 
       <br/>
@@ -36,22 +31,35 @@
          <h3 style="margin-top:0">Client</h3>
 
          <p:growl id="messages" showDetail="true" />
-        <p:tree value="#{mainBean.root}" id="tree" var="node" selectionMode="single" selection="#{mainBean.selectedNode}" dynamic="true" style="width: 100%;height: 800px;overflow: auto;display: block">
-
-           <p:ajax event="select" update=":form:messages" listener="#{mainBean.onNodeSelect}" />
+        <p:tree value="#{mainBean.root}" id="tree" var="node" selectionMode="single"  style="width: 100%;height: 500px;overflow: auto;display: block">
 
             <p:treeNode type="parent" styleClass="customTreeTable" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-               <h:outputText  value="#{node}"  style="background-color: aqua"/>
+                <p:commandLink update=":form:messages"  action="#{mainBean.viewReportForm}" actionListener="#{node.nodeClicked}" value="#{node.name}" style="background-color: aqua">
+                    <f:param name="action" value="#{node.name}" />
+                    <f:param name="motor" value="#{node.id}" />
+                </p:commandLink>
             </p:treeNode>
+
 
             <p:treeNode type="child">
-                    <h:outputText  value="#{node}" style="background-color: antiquewhite"/>
+                <p:commandLink update=":form:messages"  action="#{mainBean.viewReportForm}" actionListener="#{node.nodeClicked}" value="#{node.name}" style="background-color: gold">
+                    <f:param name="action" value="#{node.name}" />
+                    <f:param name="motor" value="#{node.id}" />
+                </p:commandLink>
             </p:treeNode>
 
+
             <p:treeNode type="childwchild" styleClass="customTreeTable" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-               <h:outputText  value="#{node}" style="background-color: yellow"/>
+                <p:commandLink update=":form:messages"  action="#{mainBean.viewReportForm}" actionListener="#{node.nodeClicked}" value="#{node.name}" style="background-color: yellow">
+                    <f:param name="action" value="#{node.name}" />
+                    <f:param name="motor" value="#{node.id}" />
+                </p:commandLink>
             </p:treeNode>
-         </p:tree>
+
+        </p:tree>
+
+
+          <p:commandButton value="Ajax Submit" id="ajaxOld" update=":form:messages" actionListener="#{mainBean.onTestButtonPress}" styleClass="ui-priority-primary" />
               </h:form>
 
    </h:body>

@@ -2,6 +2,7 @@ package ru.reso.wp.web.utils;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.TreeNode;
+import ru.reso.wp.report.models.base.Document;
 
 public class Utils {
 
@@ -11,7 +12,6 @@ public class Utils {
      * @param selectedNode
      */
     public static void rollExpandTreeNode(TreeNode selectedNode) {
-
 
         RequestContext context = RequestContext.getCurrentInstance();
 
@@ -26,12 +26,12 @@ public class Utils {
                 }
             }
         }
-
-
-
     }
 
+   public static void defineSelectedTreeNode(TreeNode allTree, Document selectedNode) {
 
+
+   }
 
 
 }
